@@ -29,6 +29,20 @@
     }:
     let
       inherit (self) outputs;
+
+      callYaziPlugins =
+        pkgs:
+        haumea.lib.load {
+          src = ./plugins;
+          inputs = {
+            inherit (pkgs) lib stdenv fetchFromGitHub;
+            flake = self;
+          };
+          # Call files like with callPackage
+          loader = haumea.lib.loaders.callPackage;
+          # Make the default.nix's attrs directly children of lib
+          transformer = haumea.lib.transformers.liftDefault;
+        };
     in
     flake-utils-plus.lib.mkFlake {
       inherit self inputs;
@@ -39,21 +53,10 @@
           pkgs = channels.nixpkgs;
         in
         {
-          packages = haumea.lib.load {
-            src = ./plugins;
-            inputs = {
-              inherit (pkgs) lib stdenv fetchFromGitHub;
-              flake = self;
-            };
-            # Call files like with callPackage
-            loader = haumea.lib.loaders.callPackage;
-            # Make the default.nix's attrs directly children of lib
-            transformer = haumea.lib.transformers.liftDefault;
-          };
-
+          packages = callYaziPlugins pkgs;
           formatter = pkgs.nixfmt-rfc-style;
         };
 
-      overlays.default = final: prev: { yaziPlugins = outputs.packages.${prev.system}; };
+      overlays.default = final: prev: { yaziPlugins = callYaziPlugins prev; };
     };
 }
