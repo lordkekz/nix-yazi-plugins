@@ -53,5 +53,7 @@
 
           formatter = pkgs.nixfmt-rfc-style;
         };
+
+      overlays.default = final: prev: { yaziPlugins = outputs.packages.${prev.system}; };
     };
 }
