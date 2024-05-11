@@ -4,9 +4,9 @@
   fetchFromGitHub,
 }:
 
-stdenv.mkDerivation rec {
-  pname = "bypass-yazi";
-  version = "unstable-2024-04-25";
+stdenv.mkDerivation {
+  pname = "yaziPlugins-bypass";
+  version = "2024-04-25";
 
   src = fetchFromGitHub {
     owner = "Rolv-Apneseth";
@@ -24,8 +24,7 @@ stdenv.mkDerivation rec {
     description = "Yazi plugin for skipping directories with only a single sub-directory";
     homepage = "https://github.com/Rolv-Apneseth/bypass.yazi";
     license = licenses.unfree; # no license in repo
-    maintainers = with maintainers; [ ];
-    mainProgram = "bypass-yazi";
+    maintainers = [ ];
     platforms = platforms.all;
   };
 }

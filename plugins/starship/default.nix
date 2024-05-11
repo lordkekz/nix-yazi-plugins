@@ -4,9 +4,9 @@
   fetchFromGitHub,
 }:
 
-stdenv.mkDerivation rec {
-  pname = "starship-yazi";
-  version = "unstable-2024-04-03";
+stdenv.mkDerivation {
+  pname = "yaziPlugins-starship";
+  version = "2024-04-03";
 
   src = fetchFromGitHub {
     owner = "Rolv-Apneseth";
@@ -24,8 +24,7 @@ stdenv.mkDerivation rec {
     description = "Starship prompt plugin for yazi";
     homepage = "https://github.com/Rolv-Apneseth/starship.yazi";
     license = licenses.mit;
-    maintainers = with maintainers; [ ];
-    mainProgram = "starship-yazi";
+    maintainers = [ ];
     platforms = platforms.all;
   };
 }

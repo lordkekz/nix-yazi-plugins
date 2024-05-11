@@ -4,9 +4,9 @@
   fetchFromGitHub,
 }:
 
-stdenv.mkDerivation rec {
-  pname = "relative-motions-yazi";
-  version = "unstable-2024-05-02";
+stdenv.mkDerivation {
+  pname = "yaziPlugins-relative-motions";
+  version = "2024-05-02";
 
   src = fetchFromGitHub {
     owner = "dedukun";
@@ -21,11 +21,10 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "";
+    description = "This plugin adds the some basic vim motions like 3k, 12j, 10gg, etc.";
     homepage = "https://github.com/dedukun/relative-motions.yazi.git";
     license = licenses.mit;
-    maintainers = with maintainers; [ ];
-    mainProgram = "relative-motions-yazi";
+    maintainers = [ ];
     platforms = platforms.all;
   };
 }
