@@ -23,7 +23,7 @@ stdenv.mkDerivation {
   meta = with lib; {
     description = "Yazi plugin for skipping directories with only a single sub-directory";
     homepage = "https://github.com/Rolv-Apneseth/bypass.yazi";
-    license = licenses.unfree; # no license in repo
+    license = licenses.mit;
     maintainers = [ ];
     platforms = platforms.all;
   };
