@@ -34,12 +34,23 @@
         pkgs:
         haumea.lib.load {
           src = ./plugins;
-          inputs = {
-            inherit (pkgs) lib stdenv fetchFromGitHub;
-            flake = self;
-          };
+          inputs =
+            (removeAttrs pkgs [
+              "self"
+              "super"
+              "root"
+            ])
+            // {
+              flake = self;
+            };
           # Call files like with callPackage
-          loader = haumea.lib.loaders.callPackage;
+          loader =
+            with pkgs.lib;
+            inputs: path:
+            if hasSuffix "default.nix" "${path}" then
+              haumea.lib.loaders.default inputs path
+            else
+              haumea.lib.loaders.callPackage inputs path;
           # Make the default.nix's attrs directly children of lib
           transformer = haumea.lib.transformers.liftDefault;
         };
