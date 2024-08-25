@@ -12,7 +12,7 @@ stdenv.mkDerivation {
     owner = "dedukun";
     repo = "relative-motions.yazi";
     rev = "8b3ee6341a4a4d0dc264a96ad8a8f6cdff585e89";
-    hash = "sha256-bGJuCJzUrTh6bre1ECvL3cXQBRolAUHxWMd4awaCCbA=";
+    sha256 = "sha256-bGJuCJzUrTh6bre1ECvL3cXQBRolAUHxWMd4awaCCbA=";
   };
 
   buildPhase = ''

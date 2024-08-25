@@ -12,7 +12,7 @@ stdenv.mkDerivation {
     owner = "Rolv-Apneseth";
     repo = "bypass.yazi";
     rev = "c436638b91e3dcdc6961242a1a0608f76bddfcea";
-    hash = "sha256-jxUR2dqNHUKdjdgLa7WQiqhdA0/Q2jt2sHxLNFcfC8w=";
+    sha256 = "sha256-jxUR2dqNHUKdjdgLa7WQiqhdA0/Q2jt2sHxLNFcfC8w=";
   };
 
   buildPhase = ''

@@ -12,7 +12,7 @@ stdenv.mkDerivation {
     owner = "yazi-rs";
     repo = "plugins";
     rev = "c8b3e3979d79c110888d0bc2cab423f3d8093592";
-    hash = "sha256-x45hP/A6XtWloAjam71fC6wPgrv8kNTr/KDlJFGMz8Q=";
+    sha256 = "sha256-x45hP/A6XtWloAjam71fC6wPgrv8kNTr/KDlJFGMz8Q=";
   };
 
   buildPhase = ''
