@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-jump-to-char";
-  version = "2024-07-15";
+  version = "unstable-2024-08-21";
 
   src = fetchFromGitHub {
     owner = "yazi-rs";
     repo = "plugins";
-    rev = "0dc9dcd5794ca7910043174ec2f2fe3561016983";
-    sha256 = "sha256-8RanvdS62IqkkKfswZUKynj34ckS9XzC8GYI9wkd3Ag=";
+    rev = "b6597919540731691158831bf1ff36ed38c1964e";
+    sha256 = "07dm70s48mas4d38zhnrfw9p3sgk83ki70xi1jb2d191ya7a2p3j";
   };
 
   buildPhase = ''

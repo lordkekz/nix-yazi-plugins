@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-bypass";
-  version = "2024-04-25";
+  version = "unstable-2024-05-13";
 
   src = fetchFromGitHub {
     owner = "Rolv-Apneseth";
     repo = "bypass.yazi";
-    rev = "c436638b91e3dcdc6961242a1a0608f76bddfcea";
-    sha256 = "sha256-jxUR2dqNHUKdjdgLa7WQiqhdA0/Q2jt2sHxLNFcfC8w=";
+    rev = "619500e8ae64e1c0e970a7637b877c3aa6a5a32a";
+    sha256 = "17dmgpvsxin77rn2invh32csf0i3fbvpgz93dsp0jgayx8pirwn5";
   };
 
   buildPhase = ''
