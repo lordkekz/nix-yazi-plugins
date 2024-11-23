@@ -15,8 +15,8 @@ stdenv.mkDerivation {
   };
 
   buildPhase = ''
-    mkdir $out
-    cp $src/* $out
+    mkdir -p $out
+    cp -r $src/* $out/
   '';
 
   meta = with lib; {
