@@ -12,7 +12,7 @@ stdenv.mkDerivation {
     owner = "lpnh";
     repo = "fg.yazi";
     rev = "a7e1a828ef4dfb01ace5b03fe0691c909466a645";
-    sha256 = "024nmc0ldkf9xzi6ymnk45d3ij2wismwfcd4p9025p5rdfsy4ynj";
+    sha256 = "QxtWyp91XcW8+PSYtER47Pcc1Y9i3LplJyTzeC5Gp2s=";
   };
 
   buildPhase = ''
