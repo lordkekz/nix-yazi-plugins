@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-starship";
-  version = "unstable-2024-08-20";
+  version = "unstable-2024-12-14";
 
   src = fetchFromGitHub {
     owner = "Rolv-Apneseth";
     repo = "starship.yazi";
-    rev = "20d5a4d4544124bade559b31d51ad41561dad92b";
-    sha256 = "024nmc0ldkf9xzi6ymnk45d3ij2wismwfcd4p9025p5rdfsy4ynj";
+    rev = "247f49da1c408235202848c0897289ed51b69343";
+    sha256 = "sha256-0J6hxcdDX9b63adVlNVWysRR5htwAtP5WhIJ2AK2+Gs=";
   };
 
   buildPhase = ''
