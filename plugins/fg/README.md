@@ -139,7 +139,7 @@ If using flakes, the overlay needs to be enabled in flake.nix for this to work, 
         #...
         modules = [
           {
-            // Here, the overlay is activated
+            # Here, the overlay is activated
             nixpkgs.overlays = [
               nix-yazi-plugins.overlays.default
             ];
