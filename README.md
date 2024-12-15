@@ -30,7 +30,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `bypass` | Skip directories with only a single sub-directory | https://github.com/Rolv-Apneseth/bypass.yazi |
 | `relative-motions` | basic vim motions like 3k, 12j, 10gg | https://github.com/dedukun/relative-motions.yazi |
 | `starship` | Show starship prompt in header | https://github.com/Rolv-Apneseth/starship.yazi |
-| `fg` | Search by file content or by filenames using ripgrep or ripgrep-all with fzf preview. Details in [plugins/fg/README.md]. | https://github.com/lpnh/fg.yazi |
+| `fg` | Search by file content or by filenames using ripgrep or ripgrep-all with fzf preview. Details in [plugins/fg/README.md](plugins/fg/README.md). | https://github.com/lpnh/fg.yazi |
 
 ## Contributing
 To request a new plugin or an update to an existing one, you can open an issue.
