@@ -121,7 +121,7 @@ If using flakes, the overlay needs to be enabled in flake.nix for this to work, 
 ```nix
 {
   inputs = {
-    //...
+    #...
     nix-yazi-plugins = {
       url = "git+ssh://git@github.com/lordkekz/nix-yazi-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -129,14 +129,14 @@ If using flakes, the overlay needs to be enabled in flake.nix for this to work, 
   };
 
   outputs = inputs@{ 
-    //...
+    #...
     nix-yazi-plugins,
     ... 
   }: {
     nixosConfigurations = {
       my-system-name = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
-        //...
+        #...
         modules = [
           {
             // Here, the overlay is activated
