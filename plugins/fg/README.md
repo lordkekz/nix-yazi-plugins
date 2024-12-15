@@ -10,10 +10,10 @@ The following config can be used in a nix file imported from home manager to ena
       fg = pkgs.yaziPlugins.fg;
     };
     keymap = {
-      // Basic yazi keybinds - only the first three have something to do with the plugin itself, 
-      // the remainder are default yazi keybinds. Those have to be re-defined explicitly as otherwise
-      // they will stop working. This is because the entire keybinds file is overwritten using the
-      // keybinds defined here, so any keybind not explicitly defined here will not work. 
+      # Basic yazi keybinds - only the first three have something to do with the plugin itself, 
+      # the remainder are default yazi keybinds. Those have to be re-defined explicitly as otherwise
+      # they will stop working. This is because the entire keybinds file is overwritten using the
+      # keybinds defined here, so any keybind not explicitly defined here will not work. 
       manager.keymap = [
       	{ on = [ "f" "f" ];	run = "plugin fg --args='fzf'"; desc = "find file by filename"; }
       	{ on = [ "f" "g" ];	run = "plugin fg"; desc = "find file by content (fuzzy match)"; }
