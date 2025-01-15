@@ -54,8 +54,7 @@
         homeManagerModulesImports = (
           map (
             v:
-            inputs@{ config, lib, ... }:
-            #inputs_outer@{ pkgs, ... }:
+            { config, lib, ... }:
             let
               cfg = config.programs.yazi.yaziPlugins.plugins.${v.name};
             in
@@ -63,7 +62,7 @@
               imports = (
                 filter (v: v != { }) [
                   (
-                    { pkgs, ... }@inputs:
+                    inputs:
                     lib.mkIf (cfg.enable && inputs.config.programs.yazi.yaziPlugins.enable) (
                       v.config ({ inherit cfg; } // (import ./lib.nix inputs)) inputs
                     )
@@ -78,16 +77,15 @@
                       programs.yazi.yaziPlugins.runtimeDeps = cfg.runtimeDeps;
                     };
                   })
-                  #(v.config cfg)
-                  ({ pkgs, ... }@inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
+                  (inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
                   (
-                    { pkgs, ... }@innerInputs:
+                    { pkgs, ... }:
                     {
                       options.programs.yazi.yaziPlugins.plugins.${v.name} = {
                         package = mkOption {
                           type = lib.types.nullOr lib.types.package;
                           description = "The ${v.name} package to use";
-                          default = self.packages.${innerInputs.pkgs.system}.${v.name};
+                          default = self.packages.${pkgs.system}.${v.name};
                         };
                         enable = mkEnableOption v.name;
                       };
