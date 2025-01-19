@@ -50,6 +50,11 @@
                   programs.yazi.plugins.${v.name} = cfg.package;
                 };
               })
+              (_: {
+                config = lib.mkIf (cfg.enable && cfg ? "runtimeDeps") {
+                  programs.yazi.yaziPlugins.runtimeDeps = cfg.runtimeDeps;
+                };
+              })
               #(v.config cfg)
               ({ pkgs, ... }@inputs:
                 (v.options ({ inherit cfg; } // (import ./lib.nix inputs)))

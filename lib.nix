@@ -1,9 +1,29 @@
-{ lib, ... }: {
+{ lib, ... }:
+let
+  inherit (lib) mkOption isList;
+  inherit (lib.types)
+    submodule
+    str
+    either
+    listOf
+    ;
+in
+{
   setKeys = keys: {
     programs.yazi.keymap.manager.prepend_keymap = lib.mapAttrsToList (_: key: {
       inherit (key) on run desc;
     }) keys;
   };
+  mkRuntimeDeps =
+    { pkgs }:
+    mkOption {
+      type = lib.types.listOf (lib.types.either lib.types.package lib.types.str);
+      description = ''
+        Additional runtime packages to add
+        to deactivate overlaying lib.mkForce [] the parent option
+      '';
+      default = pkgs;
+    };
   mkKeyOption =
     {
       on,
