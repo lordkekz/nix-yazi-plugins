@@ -21,8 +21,7 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib; {
-    description =
-      "This plugin adds the some basic vim motions like 3k, 12j, 10gg, etc.";
+    description = "This plugin adds the some basic vim motions like 3k, 12j, 10gg, etc.";
     homepage = "https://github.com/dedukun/relative-motions.yazi.git";
     license = licenses.mit;
     maintainers = [ ];
