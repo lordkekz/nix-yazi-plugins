@@ -154,8 +154,19 @@
           instance = (instantiate_lib lib pkgs);
         in
         {
-          inherit (instance) packages;
           formatter = pkgs.nixfmt-rfc-style;
+          packages = instance.packages // {
+            homeManagerModules = rec {
+              yaziPlugins =
+                { lib, ... }:
+                {
+                  imports =
+                    ((instantiate_lib lib (inputs.nixpkgs.legacyPackages.x86_64-linux)).homeManagerModulesImports)
+                    ++ [ ./module.nix ];
+                };
+              default = yaziPlugins;
+            };
+          };
 
         };
 
@@ -165,15 +176,5 @@
         in
         final: prev: { yaziPlugins = (instantiate_lib lib prev).packages; };
 
-      homeManagerModules = rec {
-        yaziPlugins =
-          { lib, ... }:
-          {
-            imports =
-              ((instantiate_lib lib (inputs.nixpkgs.legacyPackages.x86_64-linux)).homeManagerModulesImports)
-              ++ [ ./module.nix ];
-          };
-        default = yaziPlugins;
-      };
     };
 }
