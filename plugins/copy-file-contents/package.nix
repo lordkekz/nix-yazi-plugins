@@ -21,7 +21,7 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib; {
-    description = "Add a full border to Yazi to make it look fancier.";
+    description = "Copy the contents of a file to clipboard directly from Yazi.";
     homepage = "https://github.com/AnirudhG07/plugins-yazi/tree/main/copy-file-contents.yazi";
     license = licenses.mit;
     maintainers = [ ];
