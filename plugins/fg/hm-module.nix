@@ -1,8 +1,9 @@
 {
   options =
     { mkKeyOption, ... }:
-    _: {
-      enableRuntimeDependencies = mkOption {
+    { lib, ... }:
+    {
+      enableRuntimeDependencies = lib.mkOption {
         default = true;
         example = false;
         description = ''
@@ -41,18 +42,26 @@
       };
     };
   config =
-    { cfg, setKeys, ... }:
+    {
+      cfg,
+      setKeys,
+      pkgs,
+      ...
+    }:
     { lib, ... }:
     lib.mkMerge [
       (setKeys cfg.keys)
       {
-        config = lib.mkIf cfg.enableRuntimeDependencies {
-          programs.yazi.yaziPlugins.runtimeDeps = with pkgs; [
+        # Note: If dependencies are missing here, the plugin might still work
+        # if the dependencies are available on your regular PATH.
+        programs.yazi.yaziPlugins.runtimeDeps = lib.mkIf cfg.enableRuntimeDependencies (
+          with pkgs;
+          [
             bat
             fzf
             ripgrep-all
-          ];
-        };
+          ]
+        );
       }
     ];
 }

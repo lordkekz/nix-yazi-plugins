@@ -5,13 +5,14 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkOption;
+  inherit (lib) mkEnableOption mkPackageOption mkOption;
   inherit (lib.types) lines;
   cfg = config.programs.yazi.yaziPlugins;
 in
 {
   options.programs.yazi.yaziPlugins = {
     enable = mkEnableOption "yaziPlugins";
+    yaziBasePackage = mkPackageOption pkgs "yazi" { };
     runtimeDeps = mkOption {
       type = lib.types.listOf (lib.types.either lib.types.package lib.types.str);
       description = ''
@@ -24,8 +25,13 @@ in
     };
   };
   config = lib.mkIf (cfg.runtimeDeps != [ ]) {
-    programs.yazi.package = pkgs.yazi.override {
-      extraPackages = config.programs.yazi.yaziPlugins.runtimeDeps;
-    };
+    programs.yazi.package = cfg.yaziBasePackage.override (
+      # This is for the yazi wrapper from nixpkgs
+      if (lib.functionArgs cfg.yaziBasePackage.override) ? extraPackages then
+        { extraPackages = cfg.runtimeDeps; }
+      # This is for the yazi wrapper from its flake
+      else
+        { runtimeDeps = ps: ps ++ cfg.runtimeDeps; }
+    );
   };
 }

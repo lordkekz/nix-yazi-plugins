@@ -33,7 +33,8 @@
       show_motion = lib.mkEnableOption "Shows current motion in Status bar";
       only_motions = lib.mkEnableOption ''
         If true, only the motion movements will be enabled,
-        i.e., the commands for delete, cut, yank and visual selection will be disabled'';
+        i.e., the commands for delete, cut, yank and visual selection will be disabled
+      '';
     };
   config =
     { cfg, setKeys, ... }:
