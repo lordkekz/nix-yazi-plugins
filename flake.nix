@@ -54,45 +54,48 @@
         homeManagerModulesImports = (
           map (
             v:
-            { config, lib, ... }:
+            {
+              config,
+              lib,
+              pkgs,
+              ...
+            }:
             let
               cfg = config.programs.yazi.yaziPlugins.plugins.${v.name};
             in
             {
-              imports = (
-                filter (v: v != { }) [
-                  (
-                    inputs:
-                    lib.mkIf (cfg.enable && inputs.config.programs.yazi.yaziPlugins.enable) (
-                      v.config ({ inherit cfg; } // (import ./lib.nix inputs)) inputs
-                    )
+              imports = filter (v: v != { }) [
+                (
+                  inputs:
+                  lib.mkIf (cfg.enable && inputs.config.programs.yazi.yaziPlugins.enable) (
+                    v.config ({ inherit cfg pkgs; } // (import ./lib.nix inputs)) inputs
                   )
-                  (_: {
-                    config = lib.mkIf (cfg.enable && cfg.package != null) {
-                      programs.yazi.plugins.${v.name} = cfg.package;
-                    };
-                  })
-                  (_: {
-                    config = lib.mkIf (cfg.enable && cfg ? "runtimeDeps") {
-                      programs.yazi.yaziPlugins.runtimeDeps = cfg.runtimeDeps;
-                    };
-                  })
-                  (inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
-                  (
-                    { pkgs, ... }:
-                    {
-                      options.programs.yazi.yaziPlugins.plugins.${v.name} = {
-                        package = mkOption {
-                          type = lib.types.nullOr lib.types.package;
-                          description = "The ${v.name} package to use";
-                          default = self.packages.${pkgs.system}.${v.name};
-                        };
-                        enable = mkEnableOption v.name;
+                )
+                (_: {
+                  config = lib.mkIf (cfg.enable && cfg.package != null) {
+                    programs.yazi.plugins.${v.name} = cfg.package;
+                  };
+                })
+                (_: {
+                  config = lib.mkIf (cfg.enable && cfg ? "runtimeDeps") {
+                    programs.yazi.yaziPlugins.runtimeDeps = cfg.runtimeDeps;
+                  };
+                })
+                (inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
+                (
+                  { pkgs, ... }:
+                  {
+                    options.programs.yazi.yaziPlugins.plugins.${v.name} = {
+                      package = mkOption {
+                        type = lib.types.nullOr lib.types.package;
+                        description = "The ${v.name} package to use";
+                        default = self.packages.${pkgs.system}.${v.name};
                       };
-                    }
-                  )
-                ]
-              );
+                      enable = mkEnableOption v.name;
+                    };
+                  }
+                )
+              ];
             }
           ) (attrValues homeManagerModulesRaised)
         );
