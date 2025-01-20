@@ -2,12 +2,8 @@
   options =
     { cfg, mkKeyOption, ... }:
     { lib, ... }:
-    let
-      inherit (lib) map listToAttrs;
-      inherit (builtins) toString;
-    in
     {
-      keys = listToAttrs (
+      keys = lib.listToAttrs (
         lib.genList (
           idx_n:
           let
@@ -24,12 +20,13 @@
         ) 9
       );
       show_numbers = lib.mkOption {
-        type = lib.types.enum [
-          "relative"
-          "absolute"
-          "relative_absolute"
-          null
-        ];
+        type =
+          with lib.types;
+          nullOr (enum [
+            "relative"
+            "absolute"
+            "relative_absolute"
+          ]);
         default = null;
         description = "Shows relative or absolute numbers before the file icon";
       };
@@ -46,11 +43,13 @@
       {
         programs.yazi.initLua =
           let
-            show_numbers =
-              if (cfg.show_numbers == null) then "" else ''show_numbers = "${cfg.show_numbers}", ''; # optinalString doesnt work here
+            settings = {
+              inherit (cfg) show_numbers show_motion only_motions;
+            };
+            settingsStr = lib.generators.toLua {} settings;
           in
           ''
-            require("relative-motions"):setup({${show_numbers}show_motion = ${lib.trivial.boolToString cfg.show_motion}, only_motions=${lib.trivial.boolToString cfg.only_motions} })
+            require("relative-motions"):setup(${settingsStr})
           '';
       }
     ];
