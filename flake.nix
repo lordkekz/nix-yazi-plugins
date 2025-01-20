@@ -172,11 +172,7 @@
 
         };
 
-      overlays.default =
-        let
-          lib = inputs.nixpkgs.lib;
-        in
-        final: prev: { yaziPlugins = (instantiate_lib lib prev).packages; };
+      overlays.default = final: prev: { yaziPlugins = (instantiate_lib (final.lib) prev).packages; };
 
     };
 }
