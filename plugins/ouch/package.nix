@@ -21,7 +21,7 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib; {
-    description = "ouch plugin for yazi";
+    description = "A Yazi plugin to preview archives";
     homepage = "https://github.com/ndtoan96/ouch.yazi";
     license = licenses.mit;
     maintainers = [ ];
