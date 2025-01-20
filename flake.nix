@@ -152,16 +152,18 @@
           pkgs = channels.nixpkgs;
           lib = inputs.nixpkgs.lib;
           instance = (instantiate_lib lib pkgs);
+          inherit (pkgs) system;
         in
         {
           formatter = pkgs.nixfmt-rfc-style;
-          packages = instance.packages // {
+          inherit (instance) packages;
+          legacyPackages = {
             homeManagerModules = rec {
               yaziPlugins =
                 { lib, ... }:
                 {
                   imports =
-                    ((instantiate_lib lib (inputs.nixpkgs.legacyPackages.x86_64-linux)).homeManagerModulesImports)
+                    ((instantiate_lib lib (inputs.nixpkgs.legacyPackages.${system})).homeManagerModulesImports)
                     ++ [ ./module.nix ];
                 };
               default = yaziPlugins;
