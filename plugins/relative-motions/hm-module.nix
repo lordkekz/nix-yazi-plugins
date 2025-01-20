@@ -8,10 +8,10 @@
     in
     {
       keys = listToAttrs (
-        lib.lists.map (
+        lib.genList (
           idx_n:
           let
-            idx = builtins.toString idx_n;
+            idx = builtins.toString (idx_n + 1);
           in
           {
             name = idx;
@@ -21,7 +21,7 @@
               desc = "Move in relative steps";
             };
           }
-        ) (lib.range 1 9)
+        ) 9
       );
     };
   config =
