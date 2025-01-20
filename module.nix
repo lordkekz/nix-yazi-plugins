@@ -15,10 +15,10 @@ in
     runtimeDeps = mkOption {
       type = lib.types.listOf (lib.types.either lib.types.package lib.types.str);
       description = ''
-        Additional runtime packages to add
-        gets set by some modules
-        to deactivate overlaying set this to
-        lib.mkForce []
+        Additional runtime packages to make available for yazi and plugins.
+        To deactivate overlaying set this to `lib.mkForce []`.
+
+        This gets set by some plugin modules.
       '';
       default = [ ];
     };
