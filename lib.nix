@@ -20,7 +20,7 @@ in
       type = lib.types.listOf (lib.types.either lib.types.package lib.types.str);
       description = ''
         Additional runtime packages to add
-        to deactivate overlaying lib.mkForce [] the parent option
+        to deactivate overlaying `lib.mkForce []` the parent option
       '';
       default = pkgs;
     };
