@@ -46,7 +46,7 @@
             settings = {
               inherit (cfg) show_numbers show_motion only_motions;
             };
-            settingsStr = lib.generators.toLua {} settings;
+            settingsStr = lib.generators.toLua { } settings;
           in
           ''
             require("relative-motions"):setup(${settingsStr})
