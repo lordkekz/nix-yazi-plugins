@@ -18,6 +18,36 @@ There's also an overlay which will give you the packages under `pkgs.yaziPlugins
 
 The plugin packages provided by this flake can be used with the home-manager module for Yazi, see [`programs.yazi.plugins`](https://nix-community.github.io/home-manager/options.xhtml#opt-programs.yazi.plugins).
 
+### Home Manager Integration
+Easily enable plugins, a sensible default is already preconfigured.
+The init.lua, your keymaps, dependencies, plugins directory, ... are automatically managed for you
+example usage inside home-manager:
+```nix
+  imports = [
+    (inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default)
+  ];
+
+  programs.yazi = {
+    enable = true;
+  };
+
+  programs.yazi.yaziPlugins = {
+    enable = true;
+    plugins = {
+      starship.enable = true;
+      jump-to-char = {
+        enable = true;
+        keys.toggle.on = [ "F" ];
+      };
+      relative-motions = {
+        enable = true;
+        show_numbers = "relative_absolute";
+        show_motion = true;
+      };
+    };
+  };
+```
+
 ## Branches & Compatibility
 I try to support the latest release and the latest git of Yazi.
 If you run the unstable version, use the `main` branch.
