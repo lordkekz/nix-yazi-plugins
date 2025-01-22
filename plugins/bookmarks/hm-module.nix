@@ -26,15 +26,51 @@
         desc = "Delete all bookmarks";
       };
     };
+    persist = lib.mkOption {
+      type = with lib.types;
+        nullOr (enum [
+          "none"
+          "all"
+          "vim"
+        ]);
+      default = "none";
+      description = "When enabled the bookmarks will persist, i.e. if you close and reopen Yazi they will still be present.";
+    };
+    desc_format = lib.mkOption {
+      type = with lib.types;
+        nullOr (enum [
+          "full"
+          "parent"
+        ]);
+      default = "full";
+      description = "The format for the bookmark description.";
+    };
+    file_pick_mode = lib.mkOption {
+      type = with lib.types;
+        nullOr (enum [
+          "hover"
+          "parent"
+        ]);
+      default = "hover";
+      description = "The mode for choosing which directory to bookmark.";
+    };
   };
   config = {
     cfg,
     setKeys,
     ...
-  }: {
-    config,
-    lib,
-    ...
-  }:
-    {} // (setKeys cfg.keys);
+  }: {lib, ...}:
+    lib.mkMerge [
+      (setKeys cfg.keys)
+      {
+        programs.yazi.initLua = let
+          settings = {
+            inherit (cfg) persist desc_format file_pick_mode;
+          };
+          settingsStr = lib.generators.toLua {} settings;
+        in ''
+          require("bookmarks"):setup(${settingsStr})
+        '';
+      }
+    ];
 }
