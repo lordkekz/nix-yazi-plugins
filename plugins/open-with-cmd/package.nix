@@ -22,7 +22,7 @@ stdenv.mkDerivation {
     description = "This is a Yazi plugin for opening files with a prompted command.";
     homepage = "https://github.com/Ape/open-with-cmd.yazi";
     license = licenses.mit;
-    maintainers = [];
+    maintainers = [ ];
     platforms = platforms.all;
   };
 }

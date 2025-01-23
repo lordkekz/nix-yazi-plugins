@@ -23,7 +23,7 @@ stdenv.mkDerivation {
     description = "A Yazi plugin that adds the basic functionality of vi-like marks.";
     homepage = "https://github.com/dedukun/bookmarks.yazi";
     license = licenses.mit;
-    maintainers = [];
+    maintainers = [ ];
     platforms = platforms.all;
   };
 }
