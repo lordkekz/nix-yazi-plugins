@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib) mkEnableOption mkOption;
-  inherit (lib.types) lines;
   cfg = config.programs.yazi.yaziPlugins;
 in
 {
@@ -22,10 +21,66 @@ in
       '';
       default = [ ];
     };
+    requiredPlugins = mkOption {
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = mkOption {
+              type = lib.types.str;
+              description = "Name of the plugin to be `require`d";
+              example = "relative-motions";
+            };
+            setup = mkOption {
+              type = lib.types.nullOr lib.types.attrs;
+              description = "Optional settings to pass to the plugin's `setup()` function";
+              example = lib.literalExpression ''
+                {
+                  show_numbers = "relative_absolute";
+                  show_motion = true;
+                }
+              '';
+              default = null;
+            };
+          };
+        }
+      );
+      description = ''
+        Plugins that need to be `require`d in ~/.config/yazi/init.lua with optional setup settings.
+        To deactivate automatically setting up applicable plugins, set this to `lib.mkForce []`.
+
+        This gets set by some plugin modules.
+      '';
+      default = [ ];
+    };
+    extraConfig = mkOption {
+      type = lib.types.lines;
+      description = "Extra configuration lines to add to ~/.config/yazi/init.lua";
+      default = '''';
+    };
   };
-  config = lib.mkIf (cfg.runtimeDeps != [ ]) {
-    programs.yazi.package = pkgs.yazi.override {
-      extraPackages = config.programs.yazi.yaziPlugins.runtimeDeps;
+  config = {
+    programs.yazi = {
+      package = lib.mkIf (cfg.runtimeDeps != [ ]) (
+        pkgs.yazi.override {
+          extraPackages = config.programs.yazi.yaziPlugins.runtimeDeps;
+        }
+      );
+      initLua =
+        let
+          luaFormat = lib.generators.toLua { };
+          requirePlugin =
+            {
+              name,
+              setup,
+            }:
+            ''
+              require("${name}"):setup(${if setup != null then luaFormat setup else ""})
+            '';
+        in
+        lib.concatStrings [
+          (lib.concatMapStrings requirePlugin cfg.requiredPlugins)
+          cfg.extraConfig
+        ];
     };
   };
 }

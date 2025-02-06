@@ -1,7 +1,9 @@
 {
   config = _: _: {
-    programs.yazi.initLua = ''
-      require("starship"):setup()
-    '';
+    programs.yazi.yaziPlugins.requiredPlugins = [
+      {
+        name = "starship";
+      }
+    ];
   };
 }

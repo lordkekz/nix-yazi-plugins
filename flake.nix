@@ -77,6 +77,16 @@
                       programs.yazi.yaziPlugins.runtimeDeps = cfg.runtimeDeps;
                     };
                   })
+                  (_: {
+                    config = lib.mkIf (cfg.enable && cfg ? "requiredPlugins") {
+                      programs.yazi.yaziPlugins.requiredPlugins = cfg.requiredPlugins;
+                    };
+                  })
+                  (_: {
+                    config = lib.mkIf (cfg.enable && cfg ? "extraConfig") {
+                      programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
+                    };
+                  })
                   (inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
                   (
                     { pkgs, ... }:
