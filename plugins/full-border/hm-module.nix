@@ -1,7 +1,9 @@
 {
   config = _: _: {
-    programs.yazi.initLua = ''
-      require("full-border"):setup()
-    '';
+    programs.yazi.yaziPlugins.requiredPlugins = [
+      {
+        name = "full-border";
+      }
+    ];
   };
 }
