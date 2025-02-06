@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib) mkEnableOption mkOption;
-  inherit (lib.types) lines;
   cfg = config.programs.yazi.yaziPlugins;
 in
 {
@@ -17,6 +16,36 @@ in
       description = ''
         Additional runtime packages to make available for yazi and plugins.
         To deactivate overlaying set this to `lib.mkForce []`.
+
+        This gets set by some plugin modules.
+      '';
+      default = [ ];
+    };
+    requiredPlugins = mkOption {
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = mkOption {
+              type = lib.types.str;
+              description = "Name of the plugin to be `require`d";
+              example = "relative-motions";
+            };
+            setup = mkOption {
+              type = lib.types.nullOr lib.types.attrs;
+              description = "Optional settings to pass to the plugin's `setup()` function";
+              example = lib.literalExpression ''
+                {
+                  show_numbers = "relative_absolute";
+                  show_motion = true;
+                }
+              '';
+            };
+          };
+        }
+      );
+      description = ''
+        Plugins that need to be `require`d in ~/.config/yazi/init.lua with optional setup settings.
+        To deactivate automatically setting up applicable plugins, set this to `lib.mkForce []`.
 
         This gets set by some plugin modules.
       '';
