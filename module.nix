@@ -51,6 +51,11 @@ in
       '';
       default = [ ];
     };
+    extraConfig = mkOption {
+      type = lib.types.lines;
+      description = "Extra configuration lines to add to ~/.config/yazi/init.lua";
+      default = '''';
+    };
   };
   config = lib.mkIf (cfg.runtimeDeps != [ ]) {
     programs.yazi.package = pkgs.yazi.override {
