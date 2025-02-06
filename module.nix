@@ -39,6 +39,7 @@ in
                   show_motion = true;
                 }
               '';
+              default = null;
             };
           };
         }
@@ -57,9 +58,29 @@ in
       default = '''';
     };
   };
-  config = lib.mkIf (cfg.runtimeDeps != [ ]) {
-    programs.yazi.package = pkgs.yazi.override {
-      extraPackages = config.programs.yazi.yaziPlugins.runtimeDeps;
+  config = {
+    programs.yazi = {
+      package = lib.mkIf (cfg.runtimeDeps != [ ]) (
+        pkgs.yazi.override {
+          extraPackages = config.programs.yazi.yaziPlugins.runtimeDeps;
+        }
+      );
+      initLua =
+        let
+          luaFormat = lib.generators.toLua { };
+          requirePlugin =
+            {
+              name,
+              setup,
+            }:
+            ''
+              require("${name}"):setup(${if setup != null then luaFormat setup else ""})
+            '';
+        in
+        lib.concatStrings [
+          (lib.concatMapStrings requirePlugin cfg.requiredPlugins)
+          cfg.extraConfig
+        ];
     };
   };
 }
