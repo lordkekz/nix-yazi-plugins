@@ -9,10 +9,10 @@ stdenv.mkDerivation {
   version = "unstable-2024-11-23";
 
   src = fetchFromGitHub {
-    owner = "Sonico98";
+    owner = "haennes";
     repo = "exifaudio.yazi";
-    rev = "855ff055c11fb8f268b4c006a8bd59dd9bcf17a7";
-    hash = "sha256-8f1iG9RTLrso4S9mHYcm3dLKWXd/WyRzZn6KNckmiCc=";
+    rev = "6bc168bfe664c75cb943089f72b1b8cdf61b9e0b";
+    hash = "sha256-CIimJU4KaKyaKBuiBvcRJUJqTG8pkGyytT6bPf/x8j8=";
   };
   buildPhase = ''
     mkdir $out
