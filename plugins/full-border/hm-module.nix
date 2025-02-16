@@ -1,9 +1,5 @@
 {
   config = _: _: {
-    programs.yazi.yaziPlugins.requiredPlugins = [
-      {
-        name = "full-border";
-      }
-    ];
+    programs.yazi.yaziPlugins.require."full-border" = { };
   };
 }

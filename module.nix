@@ -21,36 +21,15 @@ in
       '';
       default = [ ];
     };
-    requiredPlugins = mkOption {
-      type = lib.types.listOf (
-        lib.types.submodule {
-          options = {
-            name = mkOption {
-              type = lib.types.str;
-              description = "Name of the plugin to be `require`d";
-              example = "relative-motions";
-            };
-            setup = mkOption {
-              type = lib.types.nullOr lib.types.attrs;
-              description = "Optional settings to pass to the plugin's `setup()` function";
-              example = lib.literalExpression ''
-                {
-                  show_numbers = "relative_absolute";
-                  show_motion = true;
-                }
-              '';
-              default = null;
-            };
-          };
-        }
-      );
+    require = mkOption {
+      type = with lib.types; attrsOf (nullOr attrs);
       description = ''
         Plugins that need to be `require`d in ~/.config/yazi/init.lua with optional setup settings.
         To deactivate automatically setting up applicable plugins, set this to `lib.mkForce []`.
 
         This gets set by some plugin modules.
       '';
-      default = [ ];
+      default = { };
     };
     extraConfig = mkOption {
       type = lib.types.lines;
@@ -68,17 +47,12 @@ in
       initLua =
         let
           luaFormat = lib.generators.toLua { };
-          requirePlugin =
-            {
-              name,
-              setup,
-            }:
-            ''
-              require("${name}"):setup(${if setup != null then luaFormat setup else ""})
-            '';
+          requirePlugin = name: setup: ''
+            require("${name}"):setup(${if setup != { } then luaFormat setup else ""})
+          '';
         in
         lib.concatStrings [
-          (lib.concatMapStrings requirePlugin cfg.requiredPlugins)
+          (lib.concatStrings (lib.mapAttrsToList requirePlugin cfg.require))
           cfg.extraConfig
         ];
     };

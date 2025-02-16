@@ -1,9 +1,5 @@
 {
   config = _: _: {
-    programs.yazi.yaziPlugins.requiredPlugins = [
-      {
-        name = "starship";
-      }
-    ];
+    programs.yazi.yaziPlugins.require.starship = { };
   };
 }

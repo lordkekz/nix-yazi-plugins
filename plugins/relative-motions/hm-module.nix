@@ -41,14 +41,9 @@
     lib.mkMerge [
       (setKeys cfg.keys)
       {
-        programs.yazi.yaziPlugins.requiredPlugins = [
-          {
-            name = "relative-motions";
-            setup = {
-              inherit (cfg) show_numbers show_motion only_motions;
-            };
-          }
-        ];
+        programs.yazi.yaziPlugins.require."relative-motions" = {
+          inherit (cfg) show_numbers show_motion only_motions;
+        };
       }
     ];
 }
