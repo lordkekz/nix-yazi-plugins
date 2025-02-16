@@ -78,8 +78,8 @@
                     };
                   })
                   (_: {
-                    config = lib.mkIf (cfg.enable && cfg ? "requiredPlugins") {
-                      programs.yazi.yaziPlugins.requiredPlugins = cfg.requiredPlugins;
+                    config = lib.mkIf (cfg.enable && cfg ? "require") {
+                      programs.yazi.yaziPlugins.require = cfg.require;
                     };
                   })
                   (_: {
