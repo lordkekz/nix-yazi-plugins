@@ -9,10 +9,10 @@ stdenv.mkDerivation {
   version = "unstable-2024-12-14";
 
   src = fetchFromGitHub {
-    owner = "Rolv-Apneseth";
+    owner = "haennes";
     repo = "bypass.yazi";
-    rev = "6c5414f532ede57a74687c53fee3409a38746c04";
-    sha256 = "sha256-jzE6U9RgRF0oy4HQ91WjoftZ47EXPwb7bRtlVwL8vOQ=";
+    rev = "d8a7b7f1b75f86d507f358ffe9155ca12f1f3a28";
+    sha256 = "sha256-XvVz+8sLG2gJnUUQDFofu/EsGewSB4heVTz8P3CSwGk=";
   };
 
   buildPhase = ''
