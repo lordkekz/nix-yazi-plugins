@@ -6,7 +6,7 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-hide-preview";
-  version = "unstable-2024-12-14";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "yazi-rs";
