@@ -6,7 +6,7 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-smart-filter";
-  version = "unstable-2024-08-21";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "yazi-rs";
