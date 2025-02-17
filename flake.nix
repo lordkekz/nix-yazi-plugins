@@ -98,6 +98,11 @@
                           default = self.packages.${pkgs.system}.${v.name};
                         };
                         enable = mkEnableOption v.name;
+                        extraConfig = mkOption {
+                          type = lib.types.lines;
+                          description = "Extra configuration lines to add to ~/.config/yazi/init.lua for ${v.name}";
+                          default = '''';
+                        };
                       };
                     }
                   )
