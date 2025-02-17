@@ -6,7 +6,7 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-ouch";
-  version = "unstable-2024-11-20";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "ndtoan96";
