@@ -6,7 +6,7 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-glow";
-  version = "unstable-2024-11-21";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "loqusion";
