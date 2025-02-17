@@ -5,7 +5,7 @@
 }:
 stdenv.mkDerivation {
   pname = "yaziPlugins-rich-preview";
-  version = "unstable-2024-11-23";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "AnirudhG07";
