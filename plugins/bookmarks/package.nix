@@ -10,8 +10,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "dedukun";
     repo = "bookmarks.yazi";
-    rev = "420a384f51da9bc018530068679d2e826f9ce14b";
-    hash = "sha256-SBZQhdannSGQjU/m+xbuIrCxgM0mBZXGBVYSdYy9aR0=";
+    rev = "fe0b1de939fa49068ac6b35da8d6680799931f1c";
+    hash = "sha256-5ZW73yHKEfKmN/JsZUINUVyEwvK4bA4DlufRgdT1toI=";
   };
 
   buildPhase = ''
