@@ -83,7 +83,7 @@
                     };
                   })
                   (_: {
-                    config = lib.mkIf (cfg.enable && cfg ? "extraConfig") {
+                    config = lib.mkIf (cfg.enable && cfg ? "extraConfig" && cfg.extraConfig != "") {
                       programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
                     };
                   })
