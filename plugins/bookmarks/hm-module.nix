@@ -10,12 +10,12 @@
       keys = {
         mark = mkKeyOption {
           on = [ "m" ];
-          run = "plugin bookmarks --args=save";
+          run = "plugin bookmarks save";
           desc = "Save current position as a bookmark";
         };
         jump = mkKeyOption {
           on = [ "'" ];
-          run = "plugin bookmarks --args=jump";
+          run = "plugin bookmarks jump";
           desc = "Jump to a bookmark";
         };
         delete = mkKeyOption {
@@ -23,7 +23,7 @@
             "b"
             "d"
           ];
-          run = "plugin bookmarks --args=delete";
+          run = "plugin bookmarks delete";
           desc = "Delete a bookmark";
         };
         delete_all = mkKeyOption {
@@ -31,7 +31,7 @@
             "b"
             "D"
           ];
-          run = "plugin bookmarks --args=delete_all";
+          run = "plugin bookmarks delete_all";
           desc = "Delete all bookmarks";
         };
       };

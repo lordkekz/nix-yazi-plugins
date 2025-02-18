@@ -5,7 +5,7 @@
       keys = {
         open_terminal = mkKeyOption {
           on = "o";
-          run = "plugin open-with-cmd --args=block";
+          run = "plugin open-with-cmd block";
           desc = "Open with command in the terminal";
         };
         open = mkKeyOption {
