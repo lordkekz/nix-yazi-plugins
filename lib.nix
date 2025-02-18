@@ -24,6 +24,13 @@ in
       '';
       default = pkgs;
     };
+  mkDisableOption =
+    description:
+    mkOption {
+      default = true;
+      type = lib.types.bool;
+      inherit description;
+    };
   mkKeyOption =
     {
       on,
