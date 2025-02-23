@@ -9,10 +9,10 @@ stdenv.mkDerivation {
   version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
-    owner = "loqusion";
+    owner = "Reledia";
     repo = "glow.yazi";
-    rev = "39d621a5d1308103690fee04b9840b8395410fdf";
-    hash = "sha256-1k2bOXHwsDxpgLVMOA2TW+WbJoIOb+3qj322oObHnAs=";
+    rev = "c76bf4fb612079480d305fe6fe570bddfe4f99d3";
+    hash = "sha256-DPud1Mfagl2z490f5L69ZPnZmVCa0ROXtFeDbEegBBU=";
   };
 
   buildPhase = ''
