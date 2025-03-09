@@ -63,6 +63,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `copy-file-contents` | Copy the contents of a file to clipboard directly from Yazi | https://github.com/AnirudhG07/plugins-yazi/tree/main/copy-file-contents.yazi |
 | `exifaudio` | Preview audio files metadata on yazi | https://github.com/Sonico98/exifaudio.yazi |
 | `full-border` | Add a full border to Yazi to make it look fancier | https://github.com/yazi-rs/plugins/tree/main/full-border.yazi|
+| `git` | Show the status of Git file changes as linemode in the file list | https://github.com/yazi-rs/plugins/tree/main/git.yazi|
 | `glow` | Plugin for Yazi to preview markdown files with glow | https://github.com/Reledia/glow.yazi |
 | `hide-preview` | Switch the preview pane between hidden and shown | https://github.com/yazi-rs/plugins/tree/main/hide-preview.yazi |
 | `jump-to-char` | Vim-like f<char>, jump to the next file whose name starts with <char> | https://github.com/yazi-rs/plugins/tree/main/jump-to-char.yazi |
