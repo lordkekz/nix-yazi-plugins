@@ -11,7 +11,7 @@
     flake-utils-plus.inputs.flake-utils.follows = "flake-utils";
 
     # The list of supported systems.
-    systems.url = "github:nix-systems/default-linux";
+    systems.url = "github:nix-systems/default";
 
     # Haumea for directory-defined attrset loading
     haumea.url = "github:nix-community/haumea/v0.2.2";
