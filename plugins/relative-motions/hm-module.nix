@@ -13,7 +13,7 @@
             name = idx;
             value = mkKeyOption {
               on = [ idx ];
-              run = "plugin relative-motions --args=${idx}";
+              run = "plugin relative-motions ${idx}";
               desc = "Move in relative steps";
             };
           }

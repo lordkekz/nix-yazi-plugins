@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-system-clipboard";
-  version = "unstable-2024-11-23";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
-    owner = "orhnk";
+    owner = "haennes";
     repo = "system-clipboard.yazi";
-    rev = "7775a80e8d3391e0b3da19ba143196960a4efc48";
-    hash = "sha256-tfR9XHvRqm7yPbTu/joBDpu908oceaUoBiIImehMobk=";
+    rev = "fbf979b088b970d6af7f60364e98b4a7c631b51f";
+    hash = "sha256-zOQQvbkXq71t2E4x45oM4MzVRlZ4hhe6RkvgcP8tdYE=";
   };
 
   buildPhase = ''
