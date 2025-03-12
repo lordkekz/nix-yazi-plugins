@@ -3,9 +3,8 @@
   stdenv,
   fetchFromGitHub,
 }:
-
 stdenv.mkDerivation {
-  pname = "yaziPlugins-full-border";
+  pname = "yaziPlugins-smart-enter";
   version = "unstable-2025-03-08";
 
   src = fetchFromGitHub {
@@ -17,14 +16,14 @@ stdenv.mkDerivation {
 
   buildPhase = ''
     mkdir $out
-    cp $src/full-border.yazi/* $out
+    cp $src/smart-enter.yazi/* $out
   '';
 
   meta = with lib; {
-    description = "Add a full border to Yazi to make it look fancier.";
-    homepage = "https://github.com/yazi-rs/plugins/tree/main/full-border.yazi";
+    description = "Open files or enter directories all in one key!";
+    homepage = "https://github.com/yazi-rs/plugins/tree/main/smart-enter.yazi";
     license = licenses.mit;
-    maintainers = [ ];
+    maintainers = [];
     platforms = platforms.all;
   };
 }

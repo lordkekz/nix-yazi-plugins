@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-max-preview";
-  version = "unstable-2024-12-14";
+  version = "unstable-2025-03-08";
 
   src = fetchFromGitHub {
     owner = "yazi-rs";
     repo = "plugins";
-    rev = "62f078905b4de55f19e328452c8a1f889ff2f6f4";
-    sha256 = "sha256-PSVzjC1sdaIOtK5ave4kn3Ck8YwpjO3N9uV/WE6Skdo=";
+    rev = "2bf70d880e02db95394de360668325b46f804791";
+    sha256 = "sha256-0A5UVbrP9+GRvX14VQm4Yxw+P9Ca5gtlk9qkLCVf5+Q=";
   };
 
   buildPhase = ''

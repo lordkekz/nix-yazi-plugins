@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-chmod";
-  version = "unstable-2024-08-21";
+  version = "unstable-2025-03-08";
 
   src = fetchFromGitHub {
     owner = "yazi-rs";
     repo = "plugins";
-    rev = "b6597919540731691158831bf1ff36ed38c1964e";
-    sha256 = "07dm70s48mas4d38zhnrfw9p3sgk83ki70xi1jb2d191ya7a2p3j";
+    rev = "2bf70d880e02db95394de360668325b46f804791";
+    sha256 = "sha256-0A5UVbrP9+GRvX14VQm4Yxw+P9Ca5gtlk9qkLCVf5+Q=";
   };
 
   buildPhase = ''

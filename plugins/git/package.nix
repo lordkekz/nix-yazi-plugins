@@ -5,7 +5,7 @@
 }:
 
 stdenv.mkDerivation {
-  pname = "yaziPlugins-full-border";
+  pname = "yaziPlugins-git";
   version = "unstable-2025-03-08";
 
   src = fetchFromGitHub {
@@ -17,12 +17,12 @@ stdenv.mkDerivation {
 
   buildPhase = ''
     mkdir $out
-    cp $src/full-border.yazi/* $out
+    cp $src/git.yazi/* $out
   '';
 
   meta = with lib; {
-    description = "Add a full border to Yazi to make it look fancier.";
-    homepage = "https://github.com/yazi-rs/plugins/tree/main/full-border.yazi";
+    description = "Show the status of Git file changes as linemode in the file list.";
+    homepage = "https://github.com/yazi-rs/plugins/tree/main/git.yazi";
     license = licenses.mit;
     maintainers = [ ];
     platforms = platforms.all;
