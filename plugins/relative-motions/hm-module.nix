@@ -41,16 +41,9 @@
     lib.mkMerge [
       (setKeys cfg.keys)
       {
-        programs.yazi.initLua =
-          let
-            settings = {
-              inherit (cfg) show_numbers show_motion only_motions;
-            };
-            settingsStr = lib.generators.toLua { } settings;
-          in
-          ''
-            require("relative-motions"):setup(${settingsStr})
-          '';
+        programs.yazi.yaziPlugins.require."relative-motions" = {
+          inherit (cfg) show_numbers show_motion only_motions;
+        };
       }
     ];
 }

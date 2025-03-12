@@ -77,6 +77,16 @@
                       programs.yazi.yaziPlugins.runtimeDeps = cfg.runtimeDeps;
                     };
                   })
+                  (_: {
+                    config = lib.mkIf (cfg.enable && cfg ? "require") {
+                      programs.yazi.yaziPlugins.require = cfg.require;
+                    };
+                  })
+                  (_: {
+                    config = lib.mkIf (cfg.enable && cfg ? "extraConfig" && cfg.extraConfig != "") {
+                      programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
+                    };
+                  })
                   (inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
                   (
                     { pkgs, ... }:
@@ -88,6 +98,11 @@
                           default = self.packages.${pkgs.system}.${v.name};
                         };
                         enable = mkEnableOption v.name;
+                        extraConfig = mkOption {
+                          type = lib.types.lines;
+                          description = "Extra configuration lines to add to ~/.config/yazi/init.lua for ${v.name}";
+                          default = '''';
+                        };
                       };
                     }
                   )
