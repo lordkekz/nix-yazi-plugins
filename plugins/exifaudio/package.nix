@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-exifaudio";
-  version = "unstable-2024-11-23";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "Sonico98";
     repo = "exifaudio.yazi";
-    rev = "855ff055c11fb8f268b4c006a8bd59dd9bcf17a7";
-    hash = "sha256-8f1iG9RTLrso4S9mHYcm3dLKWXd/WyRzZn6KNckmiCc=";
+    rev = "4379fcfa2dbe0b81fde2dd67b9ac2e0e48331419";
+    hash = "sha256-CIimJU4KaKyaKBuiBvcRJUJqTG8pkGyytT6bPf/x8j8=";
   };
   buildPhase = ''
     mkdir $out
