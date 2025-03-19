@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-glow";
-  version = "unstable-2024-11-21";
+  version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
     owner = "Reledia";
     repo = "glow.yazi";
-    rev = "388e847dca6497cf5903f26ca3b87485b2de4680";
-    hash = "sha256-fKJ5ld5xc6HsM/h5j73GABB5i3nmcwWCs+QSdDPA9cU=";
+    rev = "c76bf4fb612079480d305fe6fe570bddfe4f99d3";
+    hash = "sha256-DPud1Mfagl2z490f5L69ZPnZmVCa0ROXtFeDbEegBBU=";
   };
 
   buildPhase = ''
