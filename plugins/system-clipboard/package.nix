@@ -9,9 +9,9 @@ stdenv.mkDerivation {
   version = "unstable-2025-02-18";
 
   src = fetchFromGitHub {
-    owner = "haennes";
+    owner = "orhnk";
     repo = "system-clipboard.yazi";
-    rev = "fbf979b088b970d6af7f60364e98b4a7c631b51f";
+    rev = "efb8f03e632adcdc6677fd5f471c74f4c71fdf9a";
     hash = "sha256-zOQQvbkXq71t2E4x45oM4MzVRlZ4hhe6RkvgcP8tdYE=";
   };
 
