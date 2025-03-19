@@ -57,6 +57,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 
 | Attribute name | Short Description | Upstream repo |
 | --- | --- | --- |
+| `bookmarks` | A Yazi plugin that adds the basic functionality of vi-like marks | https://github.com/dedukun/bookmarks.yazi |
 | `bypass` | Skip directories with only a single sub-directory | https://github.com/Rolv-Apneseth/bypass.yazi |
 | `chmod` | Execute chmod on the selected files to change their mode | https://github.com/yazi-rs/plugins/tree/main/chmod.yazi |
 | `copy-file-contents` | Copy the contents of a file to clipboard directly from Yazi | https://github.com/AnirudhG07/plugins-yazi/tree/main/copy-file-contents.yazi |
@@ -66,6 +67,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `hide-preview` | Switch the preview pane between hidden and shown | https://github.com/yazi-rs/plugins/tree/main/hide-preview.yazi |
 | `jump-to-char` | Vim-like f<char>, jump to the next file whose name starts with <char> | https://github.com/yazi-rs/plugins/tree/main/jump-to-char.yazi |
 | `max-preview` | Maximize or restore the preview pane | https://github.com/yazi-rs/plugins/tree/main/max-preview.yazi |
+| `open-with-cmd` | This is a Yazi plugin for opening files with a prompted command. | https://github.com/Ape/open-with-cmd.yazi |
 | `ouch` | A Yazi plugin to preview archives | https://github.com/ndtoan96/ouch.yazi |
 | `relative-motions` | basic vim motions like 3k, 12j, 10gg | https://github.com/dedukun/relative-motions.yazi |
 | `rich-preview` | Rich preview plugin for yazi file manager | https://github.com/AnirudhG07/rich-preview.yazi |
