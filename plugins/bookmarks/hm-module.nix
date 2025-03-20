@@ -106,22 +106,15 @@
     lib.mkMerge [
       (setKeys cfg.keys)
       {
-        programs.yazi.initLua =
-          let
-            settings = {
-              inherit (cfg)
-                persist
-                desc_format
-                file_pick_mode
-                last_directory
-                notify
-                ;
-            };
-            settingsStr = lib.generators.toLua { } settings;
-          in
-          ''
-            require("bookmarks"):setup(${settingsStr})
-          '';
+        programs.yazi.yaziPlugins.require.bookmarks = {
+          inherit (cfg)
+            persist
+            desc_format
+            file_pick_mode
+            last_directory
+            notify
+            ;
+        };
       }
     ];
 }
