@@ -1,10 +1,7 @@
 {
   config = _: _: {
     programs.yazi = {
-      initLua = ''
-        require("git"):setup()
-      '';
-
+      yaziPlugins.require.git = { };
       settings.plugin = {
         prepend_fetchers = [
           {
