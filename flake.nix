@@ -62,7 +62,7 @@
               imports = (
                 filter (v: v != { }) [
                   (
-                    inputs:
+                    { pkgs, ... }@inputs:
                     lib.mkIf (cfg.enable && inputs.config.programs.yazi.yaziPlugins.enable) (
                       v.config ({ inherit cfg; } // (import ./lib.nix inputs)) inputs
                     )
