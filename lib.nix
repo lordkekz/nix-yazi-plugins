@@ -6,6 +6,7 @@ let
     str
     either
     listOf
+    package
     ;
 in
 {
@@ -17,7 +18,7 @@ in
   mkRuntimeDeps =
     { pkgs }:
     mkOption {
-      type = lib.types.listOf (lib.types.either lib.types.package lib.types.str);
+      type = listOf package;
       description = ''
         Additional runtime packages to add
         to deactivate overlaying `lib.mkForce []` the parent option
