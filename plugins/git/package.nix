@@ -10,8 +10,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "yazi-rs";
     repo = "plugins";
-    rev = "beb586aed0d41e6fdec5bba7816337fdad905a33";
-    sha256 = "sha256-enIt79UvQnKJalBtzSEdUkjNHjNJuKUWC4L6QFb3Ou4=";
+    rev = "9a095057d698aaaedc4dd23d638285bd3fd647e9";
+    sha256 = "sha256-Lx+TliqMuaXpjaUtjdUac7ODg2yc3yrd1mSWJo9Mz2Q=";
   };
 
   buildPhase = ''
