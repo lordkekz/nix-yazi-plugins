@@ -95,7 +95,11 @@
                         package = mkOption {
                           type = lib.types.nullOr lib.types.package;
                           description = "The ${v.name} package to use";
-                          default = self.packages.${pkgs.system}.${v.name};
+                          #TODO document this
+                          #default = (pkgs.yaziPlugins.${v.name} or self.packages.${pkgs.system}.${v.name});
+                          default =
+                            inputs.nixpkgs.legacyPackages.${pkgs.system}.yaziPlugins.${v.name}
+                              or self.packages.${pkgs.system}.${v.name};
                         };
                         enable = mkEnableOption v.name;
                         extraConfig = mkOption {
