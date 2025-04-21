@@ -1,6 +1,10 @@
 # [Yazi](https://yazi-rs.github.io/) plugins, packaged for Nix
 This is a collection of nix packages containing plugins for the Yazi TUI file manager.
 
+## Upstream Packages
+Quite Recently NixOS added yaziPlugins upstream. For this reason some packages were removed.
+The Home-Manager Integration (see below) prefers the upstream over this repositories packages, as it is assumed that nixpkgs is more stable
+
 ## Usage
 In your `flake.nix`, add an input like so:
 ```nix
