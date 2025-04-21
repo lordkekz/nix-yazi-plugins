@@ -48,7 +48,8 @@
         # -> bypass = ...
         CondRaiseAttrs = n: set: mapAttrs (_n: v: v."${n}") (filterAttrs (_n: v: v ? "${n}") set);
 
-        packages = (CondRaiseAttrs "package" YaziPlugins);
+        packages = if (pkgs ? yaziPlugins) then pkgs.yaziPlugins// packagesOurs else packagesOurs;
+        packagesOurs = (CondRaiseAttrs "package" YaziPlugins);
 
         homeManagerModulesRaised = (CondRaiseAttrs "hm-module" YaziPlugins);
         homeManagerModulesImports = (
