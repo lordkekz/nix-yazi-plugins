@@ -123,9 +123,10 @@
             bookmarks
             jump_notify
             cli
+            path
             ;
           keys = bookmarkKeys;
-          ${if !lib.isNull path then path else null} = path;
+          ${if path then path else null} = path;
         };
       }
     ];
