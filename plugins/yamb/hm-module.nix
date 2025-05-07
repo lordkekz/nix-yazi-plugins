@@ -92,17 +92,17 @@
         default = true;
       };
       cli = lib.mkOption {
-        type = with lib.types; string;
+        type = with lib.types; str;
         description = "The cli for fzf";
         default = "fzf";
       };
       bookmarkKeys = lib.mkOption {
-        type = with lib.types; string;
+        type = with lib.types; separatedString "";
         description = "A string used for randomly generating keys, where the preceding characters have higher priority";
         default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
       };
       path = lib.mkOption {
-        type = with lib.types; string;
+        type = with lib.types; str;
         description = "The path of bookmarks";
         default = "$HOME/.config/yazi/bookmark";
       };
