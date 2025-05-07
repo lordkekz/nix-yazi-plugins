@@ -102,7 +102,7 @@
         default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
       };
       path = lib.mkOption {
-        type = with lib.types; str;
+        type = with lib.types; nullOr str;
         description = "The path of bookmarks";
         # default = "~/.config/yazi/bookmark";
         default = null;
