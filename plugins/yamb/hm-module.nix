@@ -104,7 +104,8 @@
       path = lib.mkOption {
         type = with lib.types; str;
         description = "The path of bookmarks";
-        default = "~/.config/yazi/bookmark";
+        # default = "~/.config/yazi/bookmark";
+        default = null;
       };
     };
   config =
