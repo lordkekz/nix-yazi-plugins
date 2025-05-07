@@ -126,7 +126,7 @@
             path
             ;
           keys = bookmarkKeys;
-          ${if path then path else null} = path;
+          ${if path != null then path else null} = path;
         };
       }
     ];
