@@ -75,7 +75,7 @@
         };
       };
       bookmarks = lib.mkOption {
-        type = with lib.types; listOf attrsOf string;
+        # type = with lib.types; listOf (attrsOf string);
         description = "Declarative bookmarks";
         example = [
           {
