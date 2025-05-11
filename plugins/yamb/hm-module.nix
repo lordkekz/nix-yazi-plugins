@@ -116,21 +116,22 @@
     }:
     { lib, ... }:
     let
-      nonNullCfg = lib.attrsets.filterAttrs (name: val: val == null) cfg;
+      yambConfig = lib.attrsets.filterAttrs (name: val: val == null || name == "hotkeys") cfg;
     in
     lib.mkMerge [
       (setKeys cfg.hotkeys)
       {
-        programs.yazi.yaziPlugins.require.yamb = with nonNullCfg; {
-          inherit
-            bookmarks
-            jump_notify
-            cli
-            path
-            keys
-            ;
-          # ${if path != null then path else null} = path;
-        };
+        programs.yazi.yaziPlugins.require.yamb = yambConfig;
+        # {
+        #   inherit (yambConfig)
+        #     bookmarks
+        #     jump_notify
+        #     cli
+        #     path
+        #     keys
+        #     ;
+        #   # ${if path != null then path else null} = path;
+        # };
       }
     ];
 }
