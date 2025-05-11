@@ -1,7 +1,7 @@
 {
   options =
     {
-      cfg,
+      config,
       mkKeyOption,
       ...
     }:
@@ -104,7 +104,7 @@
       path = lib.mkOption {
         type = with lib.types; nullOr str;
         description = "The path of bookmarks";
-        default = "${cfg.home.homeDirectory}/.config/yazi/bookmark";
+        default = "${config.home.homeDirectory}/.config/yazi/bookmark";
         # default = null;
       };
     };
