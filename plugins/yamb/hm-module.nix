@@ -1,11 +1,11 @@
 {
   options =
     {
-      config,
+      cfg,
       mkKeyOption,
       ...
     }:
-    { lib, ... }:
+    { config, lib, ... }:
     {
       hotkeys = {
 
