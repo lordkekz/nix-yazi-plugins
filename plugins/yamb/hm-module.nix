@@ -84,28 +84,28 @@
             key = "d";
           }
         ];
-        default = [ ];
+        # default = [ ];
       };
       jump_notify = lib.mkOption {
         type = with lib.types; bool;
         description = "Recieve notification everytime you jump.";
-        default = true;
+        # default = true;
       };
       cli = lib.mkOption {
         type = with lib.types; str;
         description = "The cli for fzf";
-        default = "fzf";
+        # default = "fzf";
       };
       bookmarkKeys = lib.mkOption {
         type = with lib.types; separatedString "";
         description = "A string used for randomly generating keys, where the preceding characters have higher priority";
-        default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        # default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
       };
       path = lib.mkOption {
         type = with lib.types; nullOr str;
         description = "The path of bookmarks";
         # default = "~/.config/yazi/bookmark";
-        default = null;
+        # default = null;
       };
     };
   config =
@@ -115,10 +115,13 @@
       ...
     }:
     { lib, ... }:
+    let
+      nonNullCfg = lib.attrsets.filterAttrs (name: val: val == null) cfg;
+    in
     lib.mkMerge [
       (setKeys cfg.keys)
       {
-        programs.yazi.yaziPlugins.require.yamb = with cfg; {
+        programs.yazi.yaziPlugins.require.yamb = with nonNullCfg; {
           inherit
             bookmarks
             jump_notify
@@ -126,7 +129,7 @@
             path
             ;
           keys = bookmarkKeys;
-          ${if path != null then path else null} = path;
+          # ${if path != null then path else null} = path;
         };
       }
     ];
