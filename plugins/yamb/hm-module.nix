@@ -128,7 +128,7 @@
             cli
             path
             ;
-          keys = bookmarkKeys;
+          ${if bookmarkKeys == null then keys else null} = bookmarkKeys;
           # ${if path != null then path else null} = path;
         };
       }
