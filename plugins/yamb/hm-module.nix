@@ -105,7 +105,7 @@
         type = with lib.types; nullOr str;
         description = "The path of bookmarks";
         # default = "~/.config/yazi/bookmark";
-        # default = null;
+        default = null;
       };
     };
   config =
