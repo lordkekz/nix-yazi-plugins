@@ -116,7 +116,7 @@
     }:
     { lib, ... }:
     let
-      yambConfig = lib.attrsets.filterAttrs (name: val: val != null || name != "hotkeys") cfg;
+      yambConfig = lib.attrsets.filterAttrs (name: val: val != null && name != "hotkeys") cfg;
     in
     lib.mkMerge [
       (setKeys cfg.hotkeys)
