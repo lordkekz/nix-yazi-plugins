@@ -121,16 +121,22 @@
     lib.mkMerge [
       (setKeys cfg.keys)
       {
-        programs.yazi.yaziPlugins.require.yamb = with nonNullCfg; {
-          inherit
-            bookmarks
-            jump_notify
-            cli
-            path
-            ;
-          ${if bookmarkKeys == null then keys else null} = bookmarkKeys;
-          # ${if path != null then path else null} = path;
-        };
+        programs.yazi.yaziPlugins.require.yamb =
+          with nonNullCfg;
+          let
+            keys = bookmarkKeys;
+          in
+          {
+            inherit
+              bookmarks
+              jump_notify
+              cli
+              path
+              keys
+              ;
+            # ${if bookmarkKeys == null then keys else null} = bookmarkKeys;
+            # ${if path != null then path else null} = path;
+          };
       }
     ];
 }
