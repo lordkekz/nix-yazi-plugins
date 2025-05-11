@@ -104,7 +104,7 @@
       path = lib.mkOption {
         type = with lib.types; nullOr str;
         description = "The path of bookmarks";
-        default = "/home/zane/.config/yazi/bookmark";
+        default = "${cfg.home.homeDirectory}/.config/yazi/bookmark";
         # default = null;
       };
     };
