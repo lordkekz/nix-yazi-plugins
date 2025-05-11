@@ -7,7 +7,7 @@
     }:
     { lib, ... }:
     {
-      keys = {
+      hotkeys = {
 
         save = mkKeyOption {
           on = [
@@ -96,7 +96,7 @@
         description = "The cli for fzf";
         # default = "fzf";
       };
-      bookmarkKeys = lib.mkOption {
+      keys = lib.mkOption {
         type = with lib.types; separatedString "";
         description = "A string used for randomly generating keys, where the preceding characters have higher priority";
         # default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -119,24 +119,18 @@
       nonNullCfg = lib.attrsets.filterAttrs (name: val: val == null) cfg;
     in
     lib.mkMerge [
-      (setKeys cfg.keys)
+      (setKeys cfg.hotkeys)
       {
-        programs.yazi.yaziPlugins.require.yamb =
-          with nonNullCfg;
-          let
-            keys = bookmarkKeys;
-          in
-          {
-            inherit
-              bookmarks
-              jump_notify
-              cli
-              path
-              keys
-              ;
-            # ${if bookmarkKeys == null then keys else null} = bookmarkKeys;
-            # ${if path != null then path else null} = path;
-          };
+        programs.yazi.yaziPlugins.require.yamb = with nonNullCfg; {
+          inherit
+            bookmarks
+            jump_notify
+            cli
+            path
+            keys
+            ;
+          # ${if path != null then path else null} = path;
+        };
       }
     ];
 }
