@@ -84,28 +84,28 @@
             key = "d";
           }
         ];
-        # default = [ ];
+        default = [ ];
       };
       jump_notify = lib.mkOption {
         type = with lib.types; bool;
         description = "Recieve notification everytime you jump.";
-        # default = true;
+        default = true;
       };
       cli = lib.mkOption {
         type = with lib.types; str;
         description = "The cli for fzf";
-        # default = "fzf";
+        default = "fzf";
       };
       keys = lib.mkOption {
         type = with lib.types; separatedString "";
         description = "A string used for randomly generating keys, where the preceding characters have higher priority";
-        # default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        default = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
       };
       path = lib.mkOption {
         type = with lib.types; nullOr str;
         description = "The path of bookmarks";
-        # default = "~/.config/yazi/bookmark";
-        default = null;
+        default = "/home/zane/.config/yazi/bookmark";
+        # default = null;
       };
     };
   config =
