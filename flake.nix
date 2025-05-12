@@ -48,7 +48,7 @@
         # -> bypass = ...
         CondRaiseAttrs = n: set: mapAttrs (_n: v: v."${n}") (filterAttrs (_n: v: v ? "${n}") set);
 
-        packages = if (pkgs ? yaziPlugins) then pkgs.yaziPlugins// packagesOurs else packagesOurs;
+        packages = if (pkgs ? yaziPlugins) then pkgs.yaziPlugins // packagesOurs else packagesOurs;
         packagesOurs = (CondRaiseAttrs "package" YaziPlugins);
 
         homeManagerModulesRaised = (CondRaiseAttrs "hm-module" YaziPlugins);
@@ -88,7 +88,7 @@
                       programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
                     };
                   })
-                  (inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
+                  (inputs: (v.options ({ inherit cfg pkgs; } // (import ./lib.nix inputs))) inputs)
                   (
                     { pkgs, ... }:
                     {

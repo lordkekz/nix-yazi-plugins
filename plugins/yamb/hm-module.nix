@@ -3,7 +3,7 @@
     {
       cfg,
       mkKeyOption,
-      root,
+      pkgs,
       ...
     }:
     {
@@ -99,7 +99,7 @@
       cli = lib.mkOption {
         type = with lib.types; package;
         description = "The cli for fzf";
-        default = root.inputs.nixpkgs.fzf;
+        default = pkgs.fzf;
       };
       keys = lib.mkOption {
         type = with lib.types; separatedString "";
