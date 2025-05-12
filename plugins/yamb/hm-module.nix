@@ -127,8 +127,11 @@
       (setKeys cfg.hotkeys)
       {
         programs.yazi.yaziPlugins = {
-          require.yamb = yambConfig;
-          runtimeDeps = yambConfig.cli;
+          require.yamb = yambConfig // {
+            cli = lib.getExe yambConfig.cli; # get the executable path from the package
+          };
+          runtimeDeps = [ yambConfig.cli ]; # runtimeDeps expects a list here
+
         };
         # {
         #   inherit (yambConfig)
