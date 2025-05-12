@@ -8,6 +8,7 @@
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     {
