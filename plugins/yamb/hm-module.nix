@@ -3,7 +3,7 @@
     {
       cfg,
       mkKeyOption,
-      pkgs,
+      flake,
       ...
     }:
     {
@@ -99,7 +99,7 @@
       cli = lib.mkOption {
         type = with lib.types; package;
         description = "The cli for fzf";
-        default = pkgs.fzf;
+        default = flake.inputs.nixpkgs.fzf;
       };
       keys = lib.mkOption {
         type = with lib.types; separatedString "";
