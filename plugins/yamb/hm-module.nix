@@ -5,7 +5,12 @@
       mkKeyOption,
       ...
     }:
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       hotkeys = {
 
@@ -92,9 +97,9 @@
         default = true;
       };
       cli = lib.mkOption {
-        type = with lib.types; str;
+        type = with lib.types; package;
         description = "The cli for fzf";
-        default = "fzf";
+        default = pkgs.fzf;
       };
       keys = lib.mkOption {
         type = with lib.types; separatedString "";
@@ -121,7 +126,10 @@
     lib.mkMerge [
       (setKeys cfg.hotkeys)
       {
-        programs.yazi.yaziPlugins.require.yamb = yambConfig;
+        programs.yazi.yaziPlugins = {
+          require.yamb = yambConfig;
+          runtimeDeps = yambConfig.cli;
+        };
         # {
         #   inherit (yambConfig)
         #     bookmarks
