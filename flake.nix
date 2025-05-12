@@ -88,7 +88,7 @@
                       programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
                     };
                   })
-                  (inputs: (v.options ({ inherit cfg pkgs; } // (import ./lib.nix inputs))) inputs)
+                  ({ pkgs, ... }@inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
                   (
                     { pkgs, ... }:
                     {

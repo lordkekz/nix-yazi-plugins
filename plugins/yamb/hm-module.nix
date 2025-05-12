@@ -3,12 +3,12 @@
     {
       cfg,
       mkKeyOption,
-      pkgs,
       ...
     }:
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     {
