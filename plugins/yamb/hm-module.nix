@@ -8,7 +8,6 @@
     {
       config,
       lib,
-      pkgs,
       ...
     }:
     {
@@ -119,7 +118,7 @@
       setKeys,
       ...
     }:
-    { lib, ... }:
+    { lib, pkgs, ... }:
     let
       yambConfig = lib.attrsets.filterAttrs (name: val: val != null && name != "hotkeys") cfg;
     in
