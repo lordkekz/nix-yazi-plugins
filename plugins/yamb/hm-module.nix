@@ -98,8 +98,12 @@
       };
       cli = lib.mkOption {
         type = with lib.types; either package str;
-        description = "The cli for fzf";
-        default = pkgs.fzf;
+        description = "The cli for fzf: either a package containing an executable or a string that gives the name of package in nixpkgs that contains an executable.";
+        example = [
+          "fzf"
+          pkgs.fzf
+        ];
+        default = "fzf";
       };
       keys = lib.mkOption {
         type = with lib.types; separatedString "";
