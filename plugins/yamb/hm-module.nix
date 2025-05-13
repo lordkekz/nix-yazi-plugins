@@ -97,7 +97,7 @@
         default = true;
       };
       cli = lib.mkOption {
-        type = with lib.types; package;
+        type = with lib.types; either package str;
         description = "The cli for fzf";
         default = pkgs.fzf;
       };
@@ -110,7 +110,6 @@
         type = with lib.types; nullOr str;
         description = "The path of bookmarks";
         default = "${config.home.homeDirectory}/.config/yazi/bookmark";
-        # default = null;
       };
     };
   config =
@@ -128,21 +127,12 @@
       {
         programs.yazi.yaziPlugins = {
           require.yamb = yambConfig // {
-            cli = lib.getExe yambConfig.cli; # get the executable path from the package
+            cli = lib.getExe (
+              if builtins.isString yambConfig.cli then pkgs."${yambConfig.cli}" else yambConfig.cli
+            ); # get the executable path from the package
           };
           runtimeDeps = [ yambConfig.cli ]; # runtimeDeps expects a list here
-
         };
-        # {
-        #   inherit (yambConfig)
-        #     bookmarks
-        #     jump_notify
-        #     cli
-        #     path
-        #     keys
-        #     ;
-        #   # ${if path != null then path else null} = path;
-        # };
       }
     ];
 }
