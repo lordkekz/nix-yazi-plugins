@@ -81,7 +81,7 @@
       };
       bookmarks = lib.mkOption {
         type = with lib.types; listOf attrs;
-        description = "Declarative bookmarks";
+        description = "Declarative bookmarks for yamb";
         example = [
           {
             tag = "Desktop";
@@ -98,12 +98,12 @@
       };
       cli = lib.mkOption {
         type = with lib.types; either package str;
-        description = "The cli for fzf: either a package containing an executable or a string that gives the name of package in nixpkgs that contains an executable.";
+        description = "The CLI for fzf: either a string containing the command to be executed, or package containing an executable. If this option is a package, the package will be included as a runtime dependancy for yamb and the executable in the package will be used as the CLI command.";
         example = [
           "fzf"
           pkgs.fzf
         ];
-        default = "fzf";
+        default = pkgs.fzf;
       };
       keys = lib.mkOption {
         type = with lib.types; separatedString "";
@@ -130,12 +130,13 @@
       (setKeys cfg.hotkeys)
       {
         programs.yazi.yaziPlugins = {
-          require.yamb = yambConfig // {
-            cli = lib.getExe (
-              if builtins.isString yambConfig.cli then pkgs."${yambConfig.cli}" else yambConfig.cli
-            ); # get the executable path from the package
+          # yambConfig.cli is either string or package:
+          # if string, just insert the option
+          # if package, add it to runtimeDeps and get the executable from the package
+          requre.yamb = yambConfig // {
+            cli = if builtins.isString yambConfig.cli then yambConfig.cli else lib.getExe yambConfig.cli;
           };
-          runtimeDeps = [ yambConfig.cli ]; # runtimeDeps expects a list here
+          runtimeDeps = if builtins.isString yambConfig.cli then [ ] else [ yambConfig.cli ];
         };
       }
     ];
