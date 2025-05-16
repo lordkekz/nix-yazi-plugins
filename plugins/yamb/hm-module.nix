@@ -133,7 +133,7 @@
           # yambConfig.cli is either string or package:
           # if string, just insert the option
           # if package, add it to runtimeDeps and get the executable from the package
-          requre.yamb = yambConfig // {
+          require.yamb = yambConfig // {
             cli = if builtins.isString yambConfig.cli then yambConfig.cli else lib.getExe yambConfig.cli;
           };
           runtimeDeps = if builtins.isString yambConfig.cli then [ ] else [ yambConfig.cli ];
