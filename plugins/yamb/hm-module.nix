@@ -80,7 +80,24 @@
         };
       };
       bookmarks = lib.mkOption {
-        type = with lib.types; listOf attrs;
+        type =
+          with lib.types;
+          listOf (submodule {
+            options = {
+              tag = lib.mkOption {
+                type = with lib.types; str;
+                description = "A Tag / Name for a bookmark";
+              };
+              path = lib.mkOption {
+                type = with lib.types; either str path;
+                description = "The path of the bookmarked item";
+              };
+              key = lib.mkOption {
+                type = with lib.types; strMatching "^.$"; # single char
+                description = "A shortcut to jump to the bookmarks quickly";
+              };
+            };
+          });
         description = "Declarative bookmarks for yamb";
         example = [
           {
