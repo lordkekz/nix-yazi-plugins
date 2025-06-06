@@ -65,7 +65,6 @@ in
             type = str;
             default = run;
           };
-
           desc = mkOption {
             type = str;
             default = desc;
@@ -90,15 +89,15 @@ in
   mkMovedOption =
     extraBaseOptionPath: oldName: newName:
     let
-      baseOptionPath = extraBaseOptionPath;
+      baseOptionPath' = baseOptionPath ++ extraBaseOptionPath;
     in
-    setAttrByPath oldName (mkOption {
+    setAttrByPath (extraBaseOptionPath ++ oldName) (mkOption {
       visible = false;
       default = null;
       apply =
         x:
         lib.throwIf (x != null) "The option `${
-          showOption (baseOptionPath ++ oldName)
-        }' has been renamed to '${showOption (baseOptionPath ++ newName)}'" null;
+          showOption (baseOptionPath' ++ oldName)
+        }' has been renamed to '${showOption (baseOptionPath' ++ newName)}'" null;
     });
 }
