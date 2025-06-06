@@ -27,8 +27,8 @@
           };
         };
       }
-      (mkMovedOption [ "bypass" "keys" ] [ "right" ] [ "leave" ])
-      (mkMovedOption [ "bypass" "keys" ] [ "left" ] [ "smart-enter" ])
+      (mkMovedOption [ "keys" ] [ "right" ] [ "leave" ])
+      (mkMovedOption [ "keys" ] [ "left" ] [ "smart-enter" ])
     ];
   config = { cfg, setKeys, ... }: { config, lib, ... }: { } // (setKeys cfg.keys);
 }

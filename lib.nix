@@ -1,3 +1,6 @@
+# Plugin-specific info to customize library function
+{ baseOptionPath, ... }:
+# General inputs of the module this is used in
 { lib, ... }:
 let
   inherit (lib)
@@ -85,14 +88,9 @@ in
   # Based on nixpkgs's lib.mkRemovedOptionModule but adapted to work in our
   # non-standard way of setting options (works without using module imports)
   mkMovedOption =
-    baseOptionPath: oldName: newName:
+    extraBaseOptionPath: oldName: newName:
     let
-      baseOptionPath' = [
-        "programs"
-        "yazi"
-        "yaziPlugins"
-        "plugins"
-      ] ++ baseOptionPath;
+      baseOptionPath = extraBaseOptionPath;
     in
     setAttrByPath oldName (mkOption {
       visible = false;
@@ -100,7 +98,7 @@ in
       apply =
         x:
         lib.throwIf (x != null) "The option `${
-          showOption (baseOptionPath' ++ oldName)
-        }' has been renamed to '${showOption (baseOptionPath' ++ newName)}'" null;
+          showOption (baseOptionPath ++ oldName)
+        }' has been renamed to '${showOption (baseOptionPath ++ newName)}'" null;
     });
 }
