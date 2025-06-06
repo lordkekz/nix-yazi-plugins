@@ -6,7 +6,7 @@
       keys = {
         left = mkKeyOption {
           on = [ "l" ];
-          run = "plugin bypass smart_enter";
+          run = "plugin bypass smart-enter";
           desc = "Open a file, or recursively enter child directory, skipping children with only a single subdirectory";
         };
         right = mkKeyOption {
