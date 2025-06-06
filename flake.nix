@@ -175,7 +175,7 @@
           inherit (pkgs) system;
         in
         {
-          formatter = pkgs.nixfmt-rfc-style;
+          formatter = pkgs.nixfmt-tree;
           inherit (instance) packages;
           legacyPackages = {
             homeManagerModules = rec {
