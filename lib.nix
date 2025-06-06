@@ -86,13 +86,21 @@ in
   # non-standard way of setting options (works without using module imports)
   mkMovedOption =
     baseOptionPath: oldName: newName:
+    let
+      baseOptionPath' = [
+        "programs"
+        "yazi"
+        "yaziPlugins"
+        "plugins"
+      ] ++ baseOptionPath;
+    in
     setAttrByPath oldName (mkOption {
       visible = false;
       default = null;
       apply =
         x:
         lib.throwIf (x != null) "The option `${
-          showOption (baseOptionPath ++ oldName)
-        }' has been renamed to '${showOption (baseOptionPath ++ newName)}'" null;
+          showOption (baseOptionPath' ++ oldName)
+        }' has been renamed to '${showOption (baseOptionPath' ++ newName)}'" null;
     });
 }

@@ -27,20 +27,8 @@
           };
         };
       }
-      (mkMovedOption [
-        "programs"
-        "yazi"
-        "yaziPlugins"
-        "plugins"
-        "bypass"
-      ] [ "keys" "right" ] [ "keys" "leave" ])
-      (mkMovedOption [
-        "programs"
-        "yazi"
-        "yaziPlugins"
-        "plugins"
-        "bypass"
-      ] [ "keys" "left" ] [ "keys" "smart-enter" ])
+      (mkMovedOption [ "bypass" "keys" ] [ "right" ] [ "leave" ])
+      (mkMovedOption [ "bypass" "keys" ] [ "left" ] [ "smart-enter" ])
     ];
   config = { cfg, setKeys, ... }: { config, lib, ... }: { } // (setKeys cfg.keys);
 }
