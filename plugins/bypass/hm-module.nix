@@ -4,10 +4,11 @@
       cfg,
       mkKeyOption,
       mkMovedOption,
+      recursiveUpdateList,
       ...
     }:
     { lib, ... }:
-    lib.fold lib.recursiveUpdate { } [
+    recursiveUpdateList [
       {
         keys = {
           smart-enter = mkKeyOption {
