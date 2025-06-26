@@ -1,6 +1,16 @@
+# Plugin-specific info to customize library function
+{ baseOptionPath, ... }:
+# General inputs of the module this is used in
 { lib, ... }:
 let
-  inherit (lib) mkOption isList;
+  inherit (lib)
+    mkOption
+    isList
+    showOption
+    setAttrByPath
+    filterAttrs
+    mapAttrsToList
+    ;
   inherit (lib.types)
     submodule
     str
@@ -11,9 +21,14 @@ let
 in
 {
   setKeys = keys: {
-    programs.yazi.keymap.manager.prepend_keymap = lib.mapAttrsToList (_: key: {
-      inherit (key) on run desc;
-    }) keys;
+    programs.yazi.keymap.manager.prepend_keymap =
+      mapAttrsToList
+        (_: key: {
+          inherit (key) on run desc;
+        })
+        # `key` may be null due to mkMovedOption.
+        # `key.on` may be empty if the keybind shouldn't be used.
+        (filterAttrs (_: key: key != null && key.on != [ ]) keys);
   };
   mkRuntimeDeps =
     { pkgs }:
@@ -50,7 +65,6 @@ in
             type = str;
             default = run;
           };
-
           desc = mkOption {
             type = str;
             default = desc;
@@ -70,5 +84,21 @@ in
         else
           old;
     };
-
+  # Based on nixpkgs's lib.mkRemovedOptionModule but adapted to work in our
+  # non-standard way of setting options (works without using module imports)
+  mkMovedOption =
+    extraBaseOptionPath: oldName: newName:
+    let
+      baseOptionPath' = baseOptionPath ++ extraBaseOptionPath;
+    in
+    setAttrByPath (extraBaseOptionPath ++ oldName) (mkOption {
+      visible = false;
+      default = null;
+      apply =
+        x:
+        lib.throwIf (x != null) "The option `${
+          showOption (baseOptionPath' ++ oldName)
+        }' has been renamed to '${showOption (baseOptionPath' ++ newName)}'" null;
+    });
+  recursiveUpdateList = lib.fold lib.recursiveUpdate {};
 }

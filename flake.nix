@@ -58,14 +58,28 @@
             { config, lib, ... }:
             let
               cfg = config.programs.yazi.yaziPlugins.plugins.${v.name};
+              mkModuleArg =
+                args:
+                (import ./lib.nix {
+                  baseOptionPath = [
+                    "programs"
+                    "yazi"
+                    "yaziPlugins"
+                    "plugins"
+                    v.name
+                  ];
+                } args)
+                // {
+                  inherit cfg;
+                };
             in
             {
               imports = (
                 filter (v: v != { }) [
                   (
-                    { pkgs, ... }@inputs:
-                    lib.mkIf (cfg.enable && inputs.config.programs.yazi.yaziPlugins.enable) (
-                      v.config ({ inherit cfg; } // (import ./lib.nix inputs)) inputs
+                    { pkgs, ... }@args:
+                    lib.mkIf (cfg.enable && args.config.programs.yazi.yaziPlugins.enable) (
+                      v.config (mkModuleArg args) args
                     )
                   )
                   (_: {
@@ -88,7 +102,7 @@
                       programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
                     };
                   })
-                  ({ pkgs, ... }@inputs: (v.options ({ inherit cfg; } // (import ./lib.nix inputs))) inputs)
+                  ({ pkgs, ... }@args: v.options (mkModuleArg args) args)
                   (
                     { pkgs, ... }:
                     {
@@ -175,7 +189,7 @@
           inherit (pkgs) system;
         in
         {
-          formatter = pkgs.nixfmt-rfc-style;
+          formatter = pkgs.nixfmt-tree;
           inherit (instance) packages;
           legacyPackages = {
             homeManagerModules = rec {
