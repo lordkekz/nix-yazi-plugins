@@ -21,7 +21,7 @@ let
 in
 {
   setKeys = keys: {
-    programs.yazi.keymap.manager.prepend_keymap =
+    programs.yazi.keymap.mgr.prepend_keymap =
       mapAttrsToList
         (_: key: {
           inherit (key) on run desc;
