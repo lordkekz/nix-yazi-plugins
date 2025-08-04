@@ -23,6 +23,11 @@ There's also an overlay which will give you the packages under `pkgs.yaziPlugins
 The plugin packages provided by this flake can be used with the home-manager module for Yazi, see [`programs.yazi.plugins`](https://nix-community.github.io/home-manager/options.xhtml#opt-programs.yazi.plugins).
 
 ### Home Manager Integration
+> [!NOTE]
+> for some plugins only packages are available. just use
+> ```programs.yazi.plugins = with pkgs.yaziPlugins; {inherit pluginname;}; ```
+> Note that this will not add runtime dependencies or require the plugins in Yazi's init.lua (which is not always needed)
+
 Easily enable plugins, a sensible default is already preconfigured.
 The init.lua, your keymaps, dependencies, plugins directory, ... are automatically managed for you
 example usage inside home-manager:
