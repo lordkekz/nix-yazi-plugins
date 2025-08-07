@@ -1,0 +1,39 @@
+name: Packaging Request
+description: Can we package ...
+labels: packaging
+title: "[PACKAGE NEW] "
+body:
+  - type: checkboxes
+    id: pre_conditions
+    attributes:
+      label: Neccesarry Preconditions
+      options:
+        - label: I checked the update is compatible with the latst yazi version
+          required: true
+        - label: I have used the plugin successfully on my platform
+          required: true
+  - type: dropdown
+    id: compatible_platforms
+    attributes:
+      label: I tested / have been using the plugin successfully on the following platforms
+      multiple: true
+      options:
+        - NixOS
+        - MacOS
+    validations:
+      required: true
+  - type: checkboxes
+    id: can_contribute
+    attributes:
+      label: I am able to package this plugin myself
+      options:
+        - label: I am able to package this plugin myself
+          required: true
+  - type: checkboxes
+    id: duplicate
+    attributes:
+      label: Avoiding Duplicates
+      options:
+        - label: I checked existing open and closed issues and PRs to see if this is already in Progress
+          required: true
+

@@ -1,0 +1,45 @@
+name: Feature Request
+description: Request a new Feature that nix-yazi-plugins should provide
+labels: feature
+title: "[FEAT] "
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Description of the Feature you are planning to implement
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Backwards Compat
+      description: |
+        The Impact to existing plugin modules in terms of backward compatability if this feature is added
+      options:
+        - breaks *some* existing plugins
+        - breaks *all* existing plugins
+        - breaks *no* existing plugins
+        - introduces an additional more elegant way of writing modules / packages
+        - introduces an additional more elegant way of writing modules / packages (discourages old one)
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Implementation
+      description: Implementation
+      options:
+        - label: I am willing to implement this myself
+  - type: checkboxes
+    attributes:
+      label: |
+        If compat is broken:
+      options:
+        - label: I am willing to change all modules defintion
+        - label: I am willing to test all modules
+  - type: checkboxes
+    id: Duplicate
+    attributes:
+      label: Avoiding Duplicates
+      options:
+        - label: I checked existing open and closed issues and PRs to see if this is already in Progress or has been discussed already
+          required: true
