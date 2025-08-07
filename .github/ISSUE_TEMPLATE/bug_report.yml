@@ -1,0 +1,55 @@
+name: Bug Report
+description: Report a problem in the nix-yazi-plugins
+labels: [bug]
+title: "[BUG] "
+body:
+  - type: checkboxes
+    id: latestversions
+    attributes:
+      label: Latest Versions
+      options:
+        - label: I confirm I am using the latest nixpkgs and nix-yazi-plugins version (nix flake update)
+          required: true
+  - type: input
+    attributes:
+      label: "Yazi Version"
+      placeholder: "yazi --version"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Steps to reproduce"
+      placeholder: |
+        * Step 1
+        * Step 2
+        * ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Expected behavior"
+      placeholder: |
+        Describe the behavior you expect.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Actual behavior"
+      placeholder: |
+        Describe the actual behaviour.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Additional information"
+    validations:
+      required: false
+  - type: checkboxes
+    id: Duplicate
+    attributes:
+      label: Avoiding Duplicates
+      options:
+        - label: I checked existing open and closed issues and PRs to see if this issue is already known
+          required: true
+        - label: I I confirm this bug is due to the nix packaging and not an upstream bug of either yazi or the plugin
+          required: true

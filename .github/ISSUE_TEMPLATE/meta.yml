@@ -1,0 +1,18 @@
+name: Meta Request
+description: This does not have anything to do nix, a bug or a new feature (for example adding a .gitignore, changing the nix formatter, ...)
+labels: meta
+title: "[META] "
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Description
+    validations:
+      required: true
+  - type: checkboxes
+    id: Duplicate
+    attributes:
+      label: Avoiding Duplicates
+      options:
+        - label: I checked existing open and closed issues and PRs to see if this is already in Progress or has been discussed already
+          required: true
