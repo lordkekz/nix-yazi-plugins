@@ -3,7 +3,7 @@
     _:
     { lib, pkgs, ... }:
     {
-      package = lib.mkOption {
+      pkg = lib.mkOption {
         type = lib.types.package;
         description = "The package to use for exifaudio";
         default = pkgs.exiftool;
@@ -11,7 +11,7 @@
 
       mediainfo = {
         enable = lib.mkEnableOption "When enabled, mediainfo will be used alongside exiftool to provide more accurate metadata";
-        package = lib.mkOption {
+        pkg = lib.mkOption {
           type = lib.types.package;
           description = "The package to use for mediainfo";
           default = pkgs.mediainfo;
@@ -31,9 +31,9 @@
         ];
         # NOTE: even when mediainfo is used, exiftool is still needed to show covers
         yaziPlugins.runtimeDeps = [
-          cfg.package
+          cfg.pkg
         ]
-        ++ lib.optional (cfg.mediainfo.enable) cfg.mediainfo.package;
+        ++ lib.optional (cfg.mediainfo.enable) cfg.mediainfo.pkg;
       };
     };
 }
