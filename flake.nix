@@ -98,6 +98,16 @@
                     };
                   })
                   (_: {
+                    config = lib.mkIf (cfg.enable && cfg ? "preRequire") {
+                      programs.yazi.yaziPlugins.preRequire = cfg.preRequire;
+                    };
+                  })
+                  (_: {
+                    config = lib.mkIf (cfg.enable && cfg ? "postRequire") {
+                      programs.yazi.yaziPlugins.postRequire = cfg.postRequire;
+                    };
+                  })
+                  (_: {
                     config = lib.mkIf (cfg.enable && cfg ? "extraConfig" && cfg.extraConfig != "") {
                       programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
                     };
