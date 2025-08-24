@@ -49,26 +49,16 @@
       };
 
       # NOTE: yatline has a lot of configuration options
-      settings = lib.mkOption {
-        type = with lib.types; attrs;
-        description = "Extra configuration to pass to yatline's `setup`";
-        example = {
-          show_background = false;
-          header_line = {
-            left = {
-              section_a = [
-                {
-                  type = "line";
-                  custom = false;
-                  name = "tabs";
-                  params = [ "left" ];
-                }
-              ];
-            };
-          };
+      settings =
+        let
+          minimalConfig = import ./minimalConfig.nix;
+        in
+        lib.mkOption {
+          type = with lib.types; attrs;
+          description = "Extra configuration to pass to yatline's `setup`";
+          example = minimalConfig;
+          default = minimalConfig;
         };
-        default = { };
-      };
     };
   config =
     { cfg, ... }:
