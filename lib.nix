@@ -100,5 +100,5 @@ in
           showOption (baseOptionPath' ++ oldName)
         }' has been renamed to '${showOption (baseOptionPath' ++ newName)}'" null;
     });
-  recursiveUpdateList = lib.fold lib.recursiveUpdate {};
+  recursiveUpdateList = lib.fold lib.recursiveUpdate { };
 }

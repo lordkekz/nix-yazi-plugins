@@ -32,8 +32,7 @@
         # NOTE: even when mediainfo is used, exiftool is still needed to show covers
         yaziPlugins.runtimeDeps = [
           cfg.pkg
-        ]
-        ++ lib.optional (cfg.mediainfo.enable) cfg.mediainfo.pkg;
+        ] ++ lib.optional (cfg.mediainfo.enable) cfg.mediainfo.pkg;
       };
     };
 }
