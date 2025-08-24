@@ -31,6 +31,26 @@ in
       '';
       default = { };
     };
+    preRequire = mkOption {
+      type = with lib.types; attrsOf (nullOr lines);
+      description = ''
+        Extra code for plugins that need something to be done before calling `require` and setting them up.
+        To deactivate automatically setting up applicable plugins, set this to `lib.mkForce []`.
+
+        This gets set by some plugin modules.
+      '';
+      default = { };
+    };
+    postRequire = mkOption {
+      type = with lib.types; attrsOf (nullOr lines);
+      description = ''
+        Extra code for plugins that need something to be done after calling `require` and setting them up.
+        To deactivate automatically setting up applicable plugins, set this to `lib.mkForce []`.
+
+        This gets set by some plugin modules.
+      '';
+      default = { };
+    };
     extraConfig = mkOption {
       type = lib.types.lines;
       description = "Extra configuration lines to add to ~/.config/yazi/init.lua";
@@ -50,9 +70,19 @@ in
           requirePlugin = name: setup: ''
             require("${name}"):setup(${if setup != { } then luaFormat setup else ""})
           '';
+          setUpPlugin =
+            name: setup:
+
+            lib.concatStrings (
+              (lib.optional (cfg.preRequire ? ${name}) cfg.preRequire.${name})
+              ++ [
+                (requirePlugin name setup)
+              ]
+              ++ (lib.optional (cfg.postRequire ? ${name}) cfg.postRequire.${name})
+            );
         in
         lib.concatStrings [
-          (lib.concatStrings (lib.mapAttrsToList requirePlugin cfg.require))
+          (lib.concatStrings (lib.mapAttrsToList setUpPlugin cfg.require))
           cfg.extraConfig
         ];
     };
