@@ -79,12 +79,14 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `max-preview` | Maximize or restore the preview pane | https://github.com/yazi-rs/plugins/tree/main/max-preview.yazi |
 | `open-with-cmd` | This is a Yazi plugin for opening files with a prompted command. | https://github.com/Ape/open-with-cmd.yazi |
 | `ouch` | A Yazi plugin to preview archives | https://github.com/ndtoan96/ouch.yazi |
+| `recycle-bin` | Comprehensive trash management for Yazi with browse, restore, and delete capabilities | https://github.com/uhs-robert/recycle-bin.yazi |
 | `relative-motions` | basic vim motions like 3k, 12j, 10gg | https://github.com/dedukun/relative-motions.yazi |
 | `rich-preview` | Rich preview plugin for yazi file manager | https://github.com/AnirudhG07/rich-preview.yazi |
 | `smart-enter` | Open files or enter directories all in one key! | https://github.com/yazi-rs/plugins/tree/main/smart-enter.yazi |
 | `smart-filter` | A Yazi plugin that makes filters smarter: continuous filtering, automatically enter unique directory, open file on submitting | https://github.com/yazi-rs/plugins/tree/main/smart-filter.yazi |
 | `starship` | Show starship prompt in header | https://github.com/Rolv-Apneseth/starship.yazi |
 | `system-clipboard` | Cross platform implementation of a simple system clipboard for yazi file manager | https://github.com/orhnk/system-clipboard.yazi |
+| `torrent-preview` | A Yazi plugin for previewing BitTorrent files | https://github.com/kirasok/torrent-preview.yazi |
 
 ## Contributing
 To request a new plugin or an update to an existing one, you can open an issue.
