@@ -123,8 +123,8 @@
                           #TODO document this
                           #default = (pkgs.yaziPlugins.${v.name} or self.packages.${pkgs.system}.${v.name});
                           default =
-                            inputs.nixpkgs.legacyPackages.${pkgs.system}.yaziPlugins.${v.name}
-                              or self.packages.${pkgs.system}.${v.name};
+                            inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.yaziPlugins.${v.name}
+                              or self.packages.${pkgs.stdenv.hostPlatform.system}.${v.name};
                         };
                         enable = mkEnableOption v.name;
                         extraConfig = mkOption {
