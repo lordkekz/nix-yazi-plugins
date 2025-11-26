@@ -196,7 +196,6 @@
           pkgs = channels.nixpkgs;
           lib = inputs.nixpkgs.lib;
           instance = (instantiate_lib lib pkgs);
-          inherit (pkgs) system;
         in
         {
           formatter = pkgs.nixfmt-tree;
