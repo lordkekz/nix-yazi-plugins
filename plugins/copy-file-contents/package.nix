@@ -11,8 +11,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "AnirudhG07";
     repo = "plugins-yazi";
-    rev = "524c52c7e433834e36a502abd1e31a6a65c8caf0";
-    hash = "sha256-GrPqcHYG+qHNi80U+EJJd1JjdAOexiE6sQxsqdeCSMg=";
+    rev = "71545f4ee1a0896c555b3118dc3d2b0a1b92fad9";
+    hash = "sha256-JsQJg/SfXLQ/JIpl2YsfzdGpS1ZeWIACJwWTpHaVH3w=";
   };
 
   buildPhase = ''
