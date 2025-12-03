@@ -4,3 +4,4 @@ Click the `Preview` tab and select a PR template:
 - [feature](?expand=1&template=feature.md)
 - [meta](?expand=1&template=meta.md)
 - [packaging](?expand=1&template=packaging.md)
+- [update](?expand=1&template=package_module_update.md)
