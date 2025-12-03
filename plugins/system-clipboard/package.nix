@@ -11,8 +11,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "orhnk";
     repo = "system-clipboard.yazi";
-    rev = "efb8f03e632adcdc6677fd5f471c74f4c71fdf9a";
-    hash = "sha256-zOQQvbkXq71t2E4x45oM4MzVRlZ4hhe6RkvgcP8tdYE=";
+    rev = "888026c6d5988bd9dc5be51f7f96787bb8cadc4b";
+    hash = "sha256-8YtYYxNDfQBTyMxn6Q7/BCiTiscpiZFXRuX0riMlRWQ=";
   };
 
   buildPhase = ''

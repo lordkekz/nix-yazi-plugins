@@ -8,10 +8,10 @@ stdenv.mkDerivation {
   version = "unstable-2025-02-28";
 
   src = fetchFromGitHub {
-    owner = "h-hg";
+    owner = "haennes";
     repo = "yamb.yazi";
-    rev = "22af0033be18eead7b04c2768767d38ccfbaa05b";
-    hash = "sha256-NMxZ8/7HQgs+BsZeH4nEglWsRH2ibAzq7hRSyrtFDTA=";
+    rev = "741c05ac3967e25bf40c1942df979454c31fb2df";
+    hash = "sha256-3Cp3+v0laSVsDdTyG26EOh2xt18ER8P9Nla9vtRuj9k=";
   };
 
   buildPhase = ''
