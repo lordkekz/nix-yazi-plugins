@@ -87,6 +87,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `starship` | Show starship prompt in header | https://github.com/Rolv-Apneseth/starship.yazi |
 | `system-clipboard` | Cross platform implementation of a simple system clipboard for yazi file manager | https://github.com/orhnk/system-clipboard.yazi |
 | `torrent-preview` | A Yazi plugin for previewing BitTorrent files | https://github.com/kirasok/torrent-preview.yazi |
+| `whossh` |A lightning-fast, keyboard-first bookmark manager for Yazi| https://gitlab.com/WhoSowSee/whoosh.yazi |
 
 ## Contributing
 To request a new plugin or an update to an existing one, you can open an issue.
