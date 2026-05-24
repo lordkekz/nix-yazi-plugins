@@ -17,7 +17,12 @@
       };
     };
   config =
-    { cfg, setKeys, ... }:
+    {
+      cfg,
+      setKeys,
+      VAtLeast,
+      ...
+    }:
     {
       config,
       lib,
@@ -28,10 +33,22 @@
       {
         programs.yazi = {
           settings.plugin.prepend_previewers = [
-            {
-              name = "*.md";
-              run = "glow";
-            }
+            (
+              {
+                run = "glow";
+              }
+              // (
+                if VAtLeast "25.12.29" then
+                  {
+                    url = "*.md";
+                  }
+                else
+                  {
+                    name = "*.md";
+
+                  }
+              )
+            )
           ];
 
           yaziPlugins = {
