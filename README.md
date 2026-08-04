@@ -96,3 +96,19 @@ Contributions are also welcome! Feel free to send PRs.
 Since plugins are written in Lua, you'll most likely only need to fetch a git repo and copy the plugin content to a derivation's `$out`.
 You can generate most of the code using a tool like [`nurl`](https://github.com/nix-community/nurl).
 You can also take inspiration from the existing packages.
+
+### Updating
+
+packages can easily be updated using:
+```bash
+nix-update $plugin --flake --version=branch
+```
+
+or simply running
+```bash
+  nix run .#update -- $plugin
+```
+for updating all and commiting each step run
+```bash
+  nix run .#update-all-commit
+```

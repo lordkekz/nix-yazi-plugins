@@ -6,7 +6,7 @@
 
 stdenv.mkDerivation {
   pname = "yaziPlugins-torrent-preview";
-  version = "unstable-2025-06-21";
+  version = "0-unstable-2025-06-21";
 
   src = fetchFromGitHub {
     owner = "kirasok";

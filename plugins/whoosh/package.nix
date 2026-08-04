@@ -5,13 +5,13 @@
 }:
 stdenv.mkDerivation {
   pname = "yaziPlugins-whoosh";
-  version = "unstable-2025-10-25";
+  version = "0-unstable-2026-05-16";
 
   src = fetchFromGitLab {
     owner = "WhoSowSee";
     repo = "whoosh.yazi";
-    rev = "2a55ce41409603fa79cc9571406e69f5dc8f2257";
-    hash = "sha256-GNAchresDa6A2UFM0yKKCzoixVczKrHvNrsBCZkpqjk=";
+    rev = "47100012460ae5292cb837fca5444fecfd78f4a5";
+    hash = "sha256-BerfIDF8EHTnAELVSoaFAEoX+8gNIbkAFfeA38vStf0=";
   };
 
   buildPhase = ''
