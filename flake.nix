@@ -196,10 +196,56 @@
           pkgs = channels.nixpkgs;
           lib = inputs.nixpkgs.lib;
           instance = (instantiate_lib lib pkgs);
+          inherit (instance) packages;
         in
         {
           formatter = pkgs.nixfmt-tree;
-          inherit (instance) packages;
+          packages = packages // {
+            update = pkgs.writeShellScriptBin "update" ''
+              ${lib.getExe pkgs.nix-update} $1 --flake --version=branch
+            '';
+            # this package definition was generated using Claude Sonnet 5 Medium
+            update-all-commit = pkgs.writeShellScriptBin "update-all-commit" ''
+              set -uo pipefail
+
+              root="$(${lib.getExe pkgs.git} rev-parse --show-toplevel)"
+              cd "$root"
+
+              system="$(${lib.getExe pkgs.nix} eval --raw --impure --expr builtins.currentSystem)"
+
+              for dir in plugins/*/; do
+                plugin="$(basename "$dir")"
+                pkg_file="plugins/$plugin/package.nix"
+
+                if [ ! -f "$pkg_file" ]; then
+                  echo "skip $plugin (no $pkg_file)"
+                  continue
+                fi
+
+                old_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev" 2>/dev/null)"
+                if [ -z "$old_rev" ]; then
+                  echo "skip $plugin (couldn't eval src.rev, currently broken?)"
+                  continue
+                fi
+
+                if ! ${lib.getExe pkgs.nix-update} "$plugin" --flake --version=branch; then
+                  echo "skip $plugin (nix-update failed)"
+                  ${lib.getExe pkgs.git} checkout -- "$pkg_file"
+                  continue
+                fi
+
+                if ${lib.getExe pkgs.git} diff --quiet -- "$pkg_file"; then
+                  echo "up to date: $plugin"
+                  continue
+                fi
+
+                new_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev")"
+
+                ${lib.getExe pkgs.git} add "$pkg_file"
+                ${lib.getExe pkgs.git} commit -m "feat($plugin): update package from ''${old_rev:0:7} to ''${new_rev:0:7}"
+              done
+            '';
+          };
           legacyPackages = {
             homeManagerModules = rec {
               yaziPlugins =
