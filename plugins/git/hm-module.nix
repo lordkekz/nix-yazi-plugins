@@ -1,6 +1,6 @@
 {
   config =
-    _:
+    { VAtLeast, ... }:
     { pkgs, ... }:
     {
       programs.yazi = {
@@ -10,16 +10,56 @@
         };
         settings.plugin = {
           prepend_fetchers = [
-            {
-              id = "git";
-              name = "*";
-              run = "git";
-            }
-            {
-              id = "git";
-              name = "*/";
-              run = "git";
-            }
+            (
+              {
+                run = "git";
+              }
+              // (
+                if VAtLeast "25.12.30" then
+                  {
+                    url = "*";
+                  }
+                else
+                  {
+                    name = "*";
+                  }
+              )
+              // (
+                if VAtLeast "26.5.7" then
+                  {
+                    id = "git";
+                  }
+                else
+                  {
+                    group = "git";
+                  }
+              )
+            )
+            (
+              {
+                run = "git";
+              }
+              // (
+                if VAtLeast "25.12.30" then
+                  {
+                    url = "*/";
+                  }
+                else
+                  {
+                    name = "*/";
+                  }
+              )
+              // (
+                if VAtLeast "26.5.7" then
+                  {
+                    id = "git";
+                  }
+                else
+                  {
+                    group = "git";
+                  }
+              )
+            )
           ];
         };
       };

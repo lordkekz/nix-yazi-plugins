@@ -1,5 +1,5 @@
 # Plugin-specific info to customize library function
-{ baseOptionPath, ... }:
+{ baseOptionPath, yaziVersion, ... }:
 # General inputs of the module this is used in
 { lib, ... }:
 let
@@ -101,4 +101,6 @@ in
         }' has been renamed to '${showOption (baseOptionPath' ++ newName)}'" null;
     });
   recursiveUpdateList = lib.foldr lib.recursiveUpdate { };
+
+  VAtLeast = v: (builtins.compareVersions yaziVersion v) > 0;
 }

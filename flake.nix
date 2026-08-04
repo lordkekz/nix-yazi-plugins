@@ -47,8 +47,8 @@
         # bypass.package = ...
         # -> bypass = ...
         CondRaiseAttrs = n: set: mapAttrs (_n: v: v."${n}") (filterAttrs (_n: v: v ? "${n}") set);
-
         packages = if (pkgs ? yaziPlugins) then pkgs.yaziPlugins // packagesOurs else packagesOurs;
+
         packagesOurs = (CondRaiseAttrs "package" YaziPlugins);
 
         homeManagerModulesRaised = (CondRaiseAttrs "hm-module" YaziPlugins);
@@ -58,6 +58,7 @@
             { config, lib, ... }:
             let
               cfg = config.programs.yazi.yaziPlugins.plugins.${v.name};
+              yaziVersion = config.programs.yazi.package.version;
               mkModuleArg =
                 args:
                 (import ./lib.nix {
@@ -68,9 +69,10 @@
                     "plugins"
                     v.name
                   ];
+                  inherit yaziVersion;
                 } args)
                 // {
-                  inherit cfg;
+                  inherit cfg yaziVersion;
                 };
             in
             {
