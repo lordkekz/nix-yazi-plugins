@@ -30,7 +30,6 @@
     let
       inherit (self) outputs;
       instantiate_lib = lib: pkgs: rec {
-        inherit (pkgs) callPackage;
         inherit (lib)
           mapAttrs
           mapAttrsToList
@@ -79,7 +78,7 @@
               imports = (
                 filter (v: v != { }) [
                   (
-                    { pkgs, ... }@args:
+                    { ... }@args:
                     lib.mkIf (cfg.enable && args.config.programs.yazi.yaziPlugins.enable) (
                       v.config (mkModuleArg args) args
                     )
@@ -114,7 +113,7 @@
                       programs.yazi.yaziPlugins.extraConfig = cfg.extraConfig;
                     };
                   })
-                  ({ pkgs, ... }@args: v.options (mkModuleArg args) args)
+                  ({ ... }@args: v.options (mkModuleArg args) args)
                   (
                     { pkgs, ... }:
                     {
@@ -122,11 +121,10 @@
                         package = mkOption {
                           type = lib.types.nullOr lib.types.package;
                           description = "The ${v.name} package to use";
-                          #TODO document this
-                          #default = (pkgs.yaziPlugins.${v.name} or self.packages.${pkgs.system}.${v.name});
-                          default =
-                            inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.yaziPlugins.${v.name}
-                              or self.packages.${pkgs.stdenv.hostPlatform.system}.${v.name};
+                          default = pkgs.yaziPlugins.${v.name} or throw ''
+                            Failed to provide default value for `programs.yazi.yaziPlugins.plugins.${v.name}.package`.
+                            Package `pkgs.yaziPlugins.${v.name}` is missing; perhaps you forgot to apply the overlay from nix-yazi-plugins?
+                          '';
                         };
                         enable = mkEnableOption v.name;
                         extraConfig = mkOption {
@@ -262,10 +260,8 @@
               default = yaziPlugins;
             };
           };
-
         };
 
       overlays.default = final: prev: { yaziPlugins = (instantiate_lib (final.lib) prev).packages; };
-
     };
 }
