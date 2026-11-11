@@ -45,6 +45,18 @@ let
       afterMarker = "GLOW_PREVIEW_SENTINEL";
       afterMarkerState = "present";
     };
+    ouch = {
+      yazi = testYazis.ouch;
+      setup = ''
+        mkdir -p "$work/archive-payload"
+        printf '%s\n' 'OUCH_ARCHIVE_MEMBER' > "$work/archive-payload/OUCH_ARCHIVE_MEMBER"
+        tar -cf "$stage/test.tar" -C "$work/archive-payload" .
+      '';
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "OUCH_ARCHIVE_MEMBER";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
@@ -53,6 +65,7 @@ let
       {
         nativeBuildInputs = [
           pkgs.coreutils
+          pkgs.gnutar
           pkgs.tmux
         ];
       }

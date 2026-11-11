@@ -260,6 +260,7 @@
             };
             full-border = mkTestYazi [ "full-border" ] { };
             glow = mkTestYazi [ "glow" ] { };
+            ouch = mkTestYazi [ "ouch" ] { };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
