@@ -19,6 +19,17 @@ let
       keys = [ "F8" ];
       expectedCwd = "/only/child";
     };
+    bypass-reverse = {
+      yazi = testYazis.bypass;
+      setup = ''
+        mkdir -p "$stage/only/child"
+        : > "$stage/only/child/sentinel"
+      '';
+      startDir = "/only/child";
+      keys = [ "h" ];
+      expectedBase = "work";
+      expectedCwd = "/";
+    };
     smart-enter = {
       yazi = testYazis.smart-enter;
       setup = ''
@@ -456,7 +467,12 @@ let
         fi
 
         actual="$(cat "$YAZI_TEST_CWD_FILE")"
-        expected="$stage${if test.expectedCwd == "/" then "" else test.expectedCwd}"
+        expected_base="$stage"
+        if [ ${lib.escapeShellArg (test.expectedBase or "stage")} = work ]; then
+          expected_base="$work"
+        fi
+        expected="$expected_base${if test.expectedCwd == "/" then "" else test.expectedCwd}"
+        expected="$(realpath "$expected")"
         if [ "$actual" != "$expected" ]; then
           echo "$session ended in '$actual'; expected '$expected'" >&2
           tmux -S "$socket" -f /dev/null capture-pane -p -t "$session" >&2 || true
