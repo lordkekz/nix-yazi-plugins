@@ -265,6 +265,23 @@ let
       afterMarker = "GIT_UNTRACKED_SENTINEL";
       afterMarkerState = "present";
     };
+    recycle-bin = {
+      yazi = testYazis.recycle-bin;
+      setup = ''
+        mkdir -p "$stage/trash/files" "$stage/trash/info"
+        : > "$stage/trash/files/RECYCLE_BIN_SENTINEL.txt"
+        printf '%s\n' '[Trash Info]' 'Path=/original/RECYCLE_BIN_SENTINEL.txt' 'DeletionDate=2026-11-11T00:00:00' > "$stage/trash/info/RECYCLE_BIN_SENTINEL.txt.trashinfo"
+      '';
+      stageInHome = true;
+      keys = [
+        "F12"
+        "WAIT:Open Trash"
+      ];
+      expectedCwd = "/";
+      afterMarker = "Open Trash";
+      afterMarkerState = "present";
+      cleanupKeys = [ "Escape" ];
+    };
     toggle-pane = {
       yazi = testYazis.toggle-pane;
       setup = ''
@@ -466,6 +483,11 @@ let
             toString (test.markerCount.expected or 0)
           }
         ''}
+
+        ${lib.concatMapStringsSep "\n" (key: ''
+          tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
+          sleep 0.2
+        '') (test.cleanupKeys or [ ])}
 
         tmux -S "$socket" -f /dev/null send-keys -t "$session" q
         for _ in $(seq 1 100); do

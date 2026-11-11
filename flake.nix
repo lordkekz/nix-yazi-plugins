@@ -335,6 +335,10 @@
             git = mkTestYaziWithSettings [ "git" ] { } {
               theme.git.untracked_sign = "GIT_UNTRACKED_SENTINEL";
             };
+            recycle-bin = mkTestYazi [ "recycle-bin" ] {
+              recycle-bin.trash_dir = "$HOME/stage/trash";
+              recycle-bin.keys.open.on = [ "<F12>" ];
+            };
             toggle-pane = mkTestYazi [ "toggle-pane" ] {
               toggle-pane.keys.toggle.on = [ "<F12>" ];
             };
