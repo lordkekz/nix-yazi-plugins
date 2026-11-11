@@ -222,6 +222,16 @@ let
       ];
       expectedCwd = "/target";
     };
+    whoosh = {
+      yazi = testYazis.whoosh;
+      setup = ''
+        mkdir -p "$stage/target"
+        : > "$stage/target/sentinel"
+      '';
+      stageInHome = true;
+      keys = [ "F12" ];
+      expectedCwd = "/target";
+    };
   };
 
   checks = lib.mapAttrs (

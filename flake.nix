@@ -296,6 +296,16 @@
               ];
               yamb.hotkeys.jump.on = [ "<F12>" ];
             };
+            whoosh = mkTestYazi [ "whoosh" ] {
+              whoosh.bookmarks = [
+                {
+                  tag = "target";
+                  path = "$HOME/stage/target/";
+                  key = "k";
+                }
+              ];
+              whoosh.hotkeys.jump_key_k.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
