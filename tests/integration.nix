@@ -179,6 +179,21 @@ let
         [ "$(cat "$YAZI_TEST_CHOOSER_FILE")" = "$stage/zulu.txt" ]
       '';
     };
+    relative-motions = {
+      yazi = testYazis.relative-motions;
+      setup = ''
+        for number in 01 02 03 04 05; do
+          : > "$stage/$number.txt"
+        done
+      '';
+      keys = [
+        "2"
+        "j"
+      ];
+      expectedCwd = "/";
+      afterMarker = "2j";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (

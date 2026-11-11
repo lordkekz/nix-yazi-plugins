@@ -278,6 +278,9 @@
             jump-to-char = mkTestYazi [ "jump-to-char" ] {
               jump-to-char.keys.toggle.on = [ "<F12>" ];
             };
+            relative-motions = mkTestYazi [ "relative-motions" ] {
+              relative-motions.show_motion = true;
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
