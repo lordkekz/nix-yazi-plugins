@@ -322,6 +322,9 @@
             git = mkTestYaziWithSettings [ "git" ] { } {
               theme.git.untracked_sign = "GIT_UNTRACKED_SENTINEL";
             };
+            toggle-pane = mkTestYazi [ "toggle-pane" ] {
+              toggle-pane.keys.toggle.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

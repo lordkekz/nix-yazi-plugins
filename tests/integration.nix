@@ -243,6 +243,19 @@ let
       afterMarker = "GIT_UNTRACKED_SENTINEL";
       afterMarkerState = "present";
     };
+    toggle-pane = {
+      yazi = testYazis.toggle-pane;
+      setup = ''
+        printf '%s\n' 'TOGGLE_PANE_CONTENT_SENTINEL' > "$stage/TOGGLE_PANE_LIST_SENTINEL.txt"
+      '';
+      keys = [ "F12" ];
+      expectedCwd = "/";
+      beforeMarkerCount = 2;
+      markerCount = {
+        marker = "TOGGLE_PANE_LIST_SENTINEL.txt";
+        expected = 1;
+      };
+    };
   };
 
   checks = lib.mapAttrs (
@@ -252,6 +265,7 @@ let
         nativeBuildInputs = [
           pkgs.coreutils
           pkgs.gnutar
+          pkgs.gnugrep
           pkgs.git
           pkgs.python3
           pkgs.tmux
@@ -308,6 +322,30 @@ let
           fi
         }
 
+        wait_for_marker_count() {
+          local marker="$1"
+          local expected="$2"
+          local screen=""
+          local count=0
+          local matched=0
+
+          for _ in $(seq 1 100); do
+            screen="$(tmux -S "$socket" -f /dev/null capture-pane -p -t "$session")"
+            count="$(printf '%s\n' "$screen" | grep -F -c -- "$marker" || true)"
+            if [ "$count" -eq "$expected" ]; then
+              matched=1
+              break
+            fi
+            sleep 0.1
+          done
+
+          if [ "$matched" -ne 1 ]; then
+            echo "$session screen showed '$marker' $count times; expected $expected" >&2
+            printf '%s\n' "$screen" >&2
+            exit 1
+          fi
+        }
+
         tmux -S "$socket" -f /dev/null new-session \
           -d -s "$session" -x 100 -y 30 -c "$YAZI_TEST_START_DIR" "exec ${runYazi}"
 
@@ -330,6 +368,11 @@ let
 
         ${lib.optionalString (test.beforeMarker or null != null) ''
           wait_for_marker ${lib.escapeShellArg (test.beforeMarker or "")} present
+        ''}
+        ${lib.optionalString (test.beforeMarkerCount or null != null) ''
+          wait_for_marker_count ${
+            lib.escapeShellArg (test.markerCount.marker or "")
+          } ${toString test.beforeMarkerCount}
         ''}
 
         sleep 0.5
@@ -362,6 +405,11 @@ let
         ${lib.optionalString (test.afterMarker or null != null) ''
           wait_for_marker ${lib.escapeShellArg (test.afterMarker or "")} ${
             lib.escapeShellArg (test.afterMarkerState or "present")
+          }
+        ''}
+        ${lib.optionalString (test.markerCount or null != null) ''
+          wait_for_marker_count ${lib.escapeShellArg (test.markerCount.marker or "")} ${
+            toString (test.markerCount.expected or 0)
           }
         ''}
 
