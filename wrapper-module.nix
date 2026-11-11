@@ -117,7 +117,8 @@ let
           default = { };
         };
       }
-    ] ++ (lib.mapAttrsToList moduleConfigFor plugins);
+    ]
+    ++ (lib.mapAttrsToList moduleConfigFor plugins);
   };
 
   yaziConfig =
@@ -138,7 +139,7 @@ let
   keymap = yaziConfig.keymap or { };
   pluginExtraConfig = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (_: cfg: cfg.extraConfig) (
-      lib.filterAttrs (_: cfg: cfg.enable) config.yaziPlugins
+      lib.filterAttrs (_: cfg: cfg.enable or false) config.yaziPlugins
     )
   );
 

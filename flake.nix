@@ -135,7 +135,7 @@
                         extraConfig = mkOption {
                           type = lib.types.lines;
                           description = "Extra configuration lines to add to ~/.config/yazi/init.lua for ${v.name}";
-                          default = '''';
+                          default = "";
                         };
                       };
                     }
@@ -202,55 +202,104 @@
           lib = inputs.nixpkgs.lib;
           instance = (instantiate_lib lib pkgs);
           inherit (instance) packages;
+          pluginNames = builtins.filter (
+            name:
+            builtins.pathExists (./plugins + "/${name}/hm-module.nix")
+            && (
+              let
+                package = lib.attrByPath [ "yaziPlugins" name ] (instance.YaziPlugins.${name}.package or null) pkgs;
+              in
+              package != null && lib.meta.availableOn pkgs.stdenv.hostPlatform package
+            )
+          ) (builtins.attrNames instance.YaziPlugins);
+          allPlugins = lib.genAttrs pluginNames (_: {
+            enable = true;
+          });
+          allPluginPackages = lib.filterAttrs (
+            _: package: lib.isDerivation package && lib.meta.availableOn pkgs.stdenv.hostPlatform package
+          ) instance.packages;
+          configuredPluginPackages =
+            allPluginPackages
+            // lib.genAttrs pluginNames (
+              name: lib.attrByPath [ "yaziPlugins" name ] (instance.YaziPlugins.${name}.package or null) pkgs
+            );
+          testYazi = inputs.nix-wrapper-modules.lib.evalPackage [
+            { inherit pkgs; }
+            (import ./wrapper-module.nix {
+              inherit lib pkgs;
+              plugins = instance.YaziPlugins;
+              baseWrapper = inputs.nix-wrapper-modules.wrapperModules.yazi;
+            })
+            {
+              plugins = configuredPluginPackages;
+              yaziPlugins = lib.recursiveUpdate allPlugins {
+                bypass.keys.smart-enter.on = [ "<F8>" ];
+                smart-enter.keys.toggle.on = [ "<F9>" ];
+              };
+            }
+          ];
         in
         {
           formatter = pkgs.nixfmt-tree;
-          packages = packages // {
-            update = pkgs.writeShellScriptBin "update" ''
-              ${lib.getExe pkgs.nix-update} $1 --flake --version=branch
-            '';
-            # this package definition was generated using Claude Sonnet 5 Medium
-            update-all-commit = pkgs.writeShellScriptBin "update-all-commit" ''
-              set -uo pipefail
-
-              root="$(${lib.getExe pkgs.git} rev-parse --show-toplevel)"
-              cd "$root"
-
-              system="$(${lib.getExe pkgs.nix} eval --raw --impure --expr builtins.currentSystem)"
-
-              for dir in plugins/*/; do
-                plugin="$(basename "$dir")"
-                pkg_file="plugins/$plugin/package.nix"
-
-                if [ ! -f "$pkg_file" ]; then
-                  echo "skip $plugin (no $pkg_file)"
-                  continue
-                fi
-
-                old_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev" 2>/dev/null)"
-                if [ -z "$old_rev" ]; then
-                  echo "skip $plugin (couldn't eval src.rev, currently broken?)"
-                  continue
-                fi
-
-                if ! ${lib.getExe pkgs.nix-update} "$plugin" --flake --version=branch; then
-                  echo "skip $plugin (nix-update failed)"
-                  ${lib.getExe pkgs.git} checkout -- "$pkg_file"
-                  continue
-                fi
-
-                if ${lib.getExe pkgs.git} diff --quiet -- "$pkg_file"; then
-                  echo "up to date: $plugin"
-                  continue
-                fi
-
-                new_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev")"
-
-                ${lib.getExe pkgs.git} add "$pkg_file"
-                ${lib.getExe pkgs.git} commit -m "feat($plugin): update package from ''${old_rev:0:7} to ''${new_rev:0:7}"
-              done
-            '';
+          checks = {
+            all-plugins-build = testYazi;
+            plugins-e2e = import ./tests/integration.nix {
+              inherit pkgs testYazi;
+            };
           };
+          # Nixpkgs exposes helper attrs alongside derivations in yaziPlugins,
+          # the flake `packages` output must contain derivations only.
+          # With `nix flake check` this would be an error. Usually it is only a warning.
+          packages =
+            lib.filterAttrs (
+              _: package: lib.isDerivation package && lib.meta.availableOn pkgs.stdenv.hostPlatform package
+            ) packages
+            // {
+              update = pkgs.writeShellScriptBin "update" ''
+                ${lib.getExe pkgs.nix-update} $1 --flake --version=branch
+              '';
+              # this package definition was generated using Claude Sonnet 5 Medium
+              update-all-commit = pkgs.writeShellScriptBin "update-all-commit" ''
+                set -uo pipefail
+
+                root="$(${lib.getExe pkgs.git} rev-parse --show-toplevel)"
+                cd "$root"
+
+                system="$(${lib.getExe pkgs.nix} eval --raw --impure --expr builtins.currentSystem)"
+
+                for dir in plugins/*/; do
+                  plugin="$(basename "$dir")"
+                  pkg_file="plugins/$plugin/package.nix"
+
+                  if [ ! -f "$pkg_file" ]; then
+                    echo "skip $plugin (no $pkg_file)"
+                    continue
+                  fi
+
+                  old_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev" 2>/dev/null)"
+                  if [ -z "$old_rev" ]; then
+                    echo "skip $plugin (couldn't eval src.rev, currently broken?)"
+                    continue
+                  fi
+
+                  if ! ${lib.getExe pkgs.nix-update} "$plugin" --flake --version=branch; then
+                    echo "skip $plugin (nix-update failed)"
+                    ${lib.getExe pkgs.git} checkout -- "$pkg_file"
+                    continue
+                  fi
+
+                  if ${lib.getExe pkgs.git} diff --quiet -- "$pkg_file"; then
+                    echo "up to date: $plugin"
+                    continue
+                  fi
+
+                  new_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev")"
+
+                  ${lib.getExe pkgs.git} add "$pkg_file"
+                  ${lib.getExe pkgs.git} commit -m "feat($plugin): update package from ''${old_rev:0:7} to ''${new_rev:0:7}"
+                done
+              '';
+            };
           legacyPackages = {
             homeManagerModules = rec {
               yaziPlugins =
