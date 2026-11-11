@@ -149,6 +149,19 @@ let
       ];
       expectedCwd = "/";
     };
+    smart-filter = {
+      yazi = testYazis.smart-filter;
+      setup = ''
+        mkdir -p "$stage/target-dir"
+        : > "$stage/target-dir/sentinel"
+      '';
+      keys = [
+        "F12"
+        "TEXT:target-dir"
+        "C-c"
+      ];
+      expectedCwd = "/target-dir";
+    };
   };
 
   checks = lib.mapAttrs (

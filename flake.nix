@@ -272,6 +272,9 @@
             open-with-cmd = mkTestYazi [ "open-with-cmd" ] {
               open-with-cmd.keys.open_terminal.on = [ "<F12>" ];
             };
+            smart-filter = mkTestYazi [ "smart-filter" ] {
+              smart-filter.keys.toggle.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
