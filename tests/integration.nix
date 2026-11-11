@@ -194,6 +194,21 @@ let
       afterMarker = "2j";
       afterMarkerState = "present";
     };
+    bookmarks = {
+      yazi = testYazis.bookmarks;
+      setup = ''
+        mkdir -p "$stage/target"
+        : > "$stage/target/sentinel"
+      '';
+      keys = [
+        "F8"
+        "x"
+        "l"
+        "F9"
+        "x"
+      ];
+      expectedCwd = "/";
+    };
   };
 
   checks = lib.mapAttrs (

@@ -281,6 +281,11 @@
             relative-motions = mkTestYazi [ "relative-motions" ] {
               relative-motions.show_motion = true;
             };
+            bookmarks = mkTestYazi [ "bookmarks" ] {
+              bookmarks.file_pick_mode = "parent";
+              bookmarks.keys.mark.on = [ "<F8>" ];
+              bookmarks.keys.jump.on = [ "<F9>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
