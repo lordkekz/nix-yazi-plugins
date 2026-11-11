@@ -226,23 +226,43 @@
             // lib.genAttrs pluginNames (
               name: lib.attrByPath [ "yaziPlugins" name ] (instance.YaziPlugins.${name}.package or null) pkgs
             );
-          testYazi = inputs.nix-wrapper-modules.lib.evalPackage [
-            { inherit pkgs; }
-            (import ./wrapper-module.nix {
-              inherit lib pkgs;
-              plugins = instance.YaziPlugins;
-              baseWrapper = inputs.nix-wrapper-modules.wrapperModules.yazi;
-            })
-            {
-              plugins = configuredPluginPackages;
-              yaziPlugins = lib.recursiveUpdate allPlugins {
-                bypass.keys.smart-enter.on = [ "<F8>" ];
-                smart-enter.keys.toggle.on = [ "<F9>" ];
-                max-preview.enable = false;
-                hide-preview.enable = false;
-              };
+          testWrapperModule = import ./wrapper-module.nix {
+            inherit lib pkgs;
+            plugins = instance.YaziPlugins;
+            baseWrapper = inputs.nix-wrapper-modules.wrapperModules.yazi;
+          };
+          mkTestYazi =
+            enabledPlugins: pluginConfig:
+            inputs.nix-wrapper-modules.lib.evalPackage [
+              { inherit pkgs; }
+              testWrapperModule
+              {
+                plugins = configuredPluginPackages;
+                yaziPlugins = lib.recursiveUpdate (lib.genAttrs enabledPlugins (_: {
+                  enable = true;
+                })) pluginConfig;
+              }
+            ];
+          testYazi = mkTestYazi pluginNames (
+            lib.recursiveUpdate allPlugins {
+              bypass.keys.smart-enter.on = [ "<F8>" ];
+              smart-enter.keys.toggle.on = [ "<F9>" ];
+              max-preview.enable = false;
+              hide-preview.enable = false;
             }
-          ];
+          );
+          pluginTestYazis = {
+            bypass = mkTestYazi [ "bypass" ] {
+              bypass.keys.smart-enter.on = [ "<F8>" ];
+            };
+            smart-enter = mkTestYazi [ "smart-enter" ] {
+              smart-enter.keys.toggle.on = [ "<F9>" ];
+            };
+          };
+          integrationTests = import ./tests/integration.nix {
+            inherit pkgs;
+            testYazis = pluginTestYazis;
+          };
           homeManagerYazi = inputs.home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
@@ -269,10 +289,11 @@
           checks = {
             all-plugins-build = testYazi;
             home-manager-all-plugins-build = homeManagerYazi.activationPackage;
-            plugins-e2e = import ./tests/integration.nix {
-              inherit pkgs testYazi;
-            };
-          };
+            plugins-e2e = integrationTests.aggregate;
+          }
+          // lib.mapAttrs' (
+            name: check: lib.nameValuePair "plugin-${name}-e2e" check
+          ) integrationTests.checks;
           # Nixpkgs exposes helper attrs alongside derivations in yaziPlugins,
           # the flake `packages` output must contain derivations only.
           # With `nix flake check` this would be an error. Usually it is only a warning.
