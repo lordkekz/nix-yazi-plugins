@@ -49,10 +49,16 @@ nix flake check
 # or individually with
 system="$(nix eval --raw --impure --expr builtins.currentSystem)"
 nix build ".#checks.${system}.all-plugins-build"
+nix build ".#checks.${system}.home-manager-all-plugins-build"
 nix build ".#checks.${system}.plugins-e2e"
+nix build ".#checks.${system}.plugin-<name>-e2e"
 ```
 
 `all-plugins-build` builds a wrapper-configured Yazi with all plugin packages
-available on the target system and enables their corresponding modules. The
-integration check starts that Yazi in staged directories and verifies navigation
-side effects for `bypass` and `smart-enter`.
+available on the target system and enables their corresponding modules.
+`home-manager-all-plugins-build` builds the same configuration through the
+Home Manager module. The integration suite has a separate check for each plugin
+and an aggregate `plugins-e2e` target. Cases use staged directories and prefer
+observable side effects; visual-only assertions capture tmux output. Every case
+uses a private tmux socket inside the build's temporary directory and never
+connects to the default tmux server.
