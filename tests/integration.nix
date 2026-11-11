@@ -27,6 +27,14 @@ let
       keys = [ "F9" ];
       expectedCwd = "/one-level";
     };
+    full-border = {
+      yazi = testYazis.full-border;
+      setup = "";
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "╭";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
@@ -113,9 +121,12 @@ let
         ''}
 
         sleep 0.5
-        ${lib.concatMapStringsSep "\n" (key: ''
-          tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
-        '') test.keys}
+        ${lib.concatMapStringsSep "\n" (
+          key:
+          lib.optionalString (key != "NONE") ''
+            tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
+          ''
+        ) test.keys}
         sleep 0.5
 
         ${lib.optionalString (test.afterMarker or null != null) ''
@@ -135,7 +146,7 @@ let
         fi
 
         actual="$(cat "$YAZI_TEST_CWD_FILE")"
-        expected="$stage${test.expectedCwd}"
+        expected="$stage${if test.expectedCwd == "/" then "" else test.expectedCwd}"
         if [ "$actual" != "$expected" ]; then
           echo "$session ended in '$actual'; expected '$expected'" >&2
           tmux -S "$socket" -f /dev/null capture-pane -p -t "$session" >&2 || true

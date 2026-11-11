@@ -258,6 +258,7 @@
             smart-enter = mkTestYazi [ "smart-enter" ] {
               smart-enter.keys.toggle.on = [ "<F9>" ];
             };
+            full-border = mkTestYazi [ "full-border" ] { };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
