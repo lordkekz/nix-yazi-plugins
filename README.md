@@ -57,6 +57,59 @@ example usage inside home-manager:
   };
 ```
 
+### nix-wrapper-modules
+
+The flake also exports `wrapperModules.yaziWithPlugins`. It extends the
+original `nix-wrapper-modules` Yazi wrapper, retaining its configuration
+options while adding plugin enablement and Home-Manager-style plugin settings.
+Add `nix-wrapper-modules` to your flake inputs:
+
+```nix
+{
+  inputs = {
+    nix-wrapper-modules = {
+      url = "github:nix-community/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-yazi-plugins = {
+      url = "github:lordkekz/nix-yazi-plugins?ref=yazi-v0.2.5";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nix-wrapper-modules.follows = "nix-wrapper-modules";
+    };
+  };
+
+  outputs = { self, nixpkgs, nix-wrapper-modules, nix-yazi-plugins, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      packages.${system}.yazi = nix-wrapper-modules.lib.evalPackage [
+        { inherit pkgs; }
+        nix-yazi-plugins.wrapperModules.yaziWithPlugins
+        {
+          yaziPlugins = {
+            starship.enable = true;
+            relative-motions = {
+              enable = true;
+              show_numbers = "relative_absolute";
+              show_motion = true;
+            };
+          };
+        }
+      ];
+    };
+}
+```
+
+The `yaziPlugins.<name>` options — including plugin-specific settings and
+keymaps — are shared with the Home Manager modules. The original wrapper's
+`plugins` option remains available for adding packages directly, along with its
+settings, flavors, and other configuration options. The wrapper sets
+`YAZI_CONFIG_HOME` to its generated, read-only configuration directory. For
+plugins that save persistent data under a home directory, `$HOME` is expanded
+at runtime by default; set `homeDirectory` to override it.
+
 ## Branches & Compatibility
 I try to support the latest release and the latest git of Yazi.
 If you run the unstable version, use the `main` branch.
@@ -74,9 +127,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `full-border` | Add a full border to Yazi to make it look fancier | https://github.com/yazi-rs/plugins/tree/main/full-border.yazi|
 | `git` | Show the status of Git file changes as linemode in the file list | https://github.com/yazi-rs/plugins/tree/main/git.yazi|
 | `glow` | Plugin for Yazi to preview markdown files with glow | https://github.com/Reledia/glow.yazi |
-| `hide-preview` | Switch the preview pane between hidden and shown | https://github.com/yazi-rs/plugins/tree/main/hide-preview.yazi |
 | `jump-to-char` | Vim-like f<char>, jump to the next file whose name starts with <char> | https://github.com/yazi-rs/plugins/tree/main/jump-to-char.yazi |
-| `max-preview` | Maximize or restore the preview pane | https://github.com/yazi-rs/plugins/tree/main/max-preview.yazi |
 | `open-with-cmd` | This is a Yazi plugin for opening files with a prompted command. | https://github.com/Ape/open-with-cmd.yazi |
 | `ouch` | A Yazi plugin to preview archives | https://github.com/ndtoan96/ouch.yazi |
 | `recycle-bin` | Comprehensive trash management for Yazi with browse, restore, and delete capabilities | https://github.com/uhs-robert/recycle-bin.yazi |
@@ -86,6 +137,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `smart-filter` | A Yazi plugin that makes filters smarter: continuous filtering, automatically enter unique directory, open file on submitting | https://github.com/yazi-rs/plugins/tree/main/smart-filter.yazi |
 | `starship` | Show starship prompt in header | https://github.com/Rolv-Apneseth/starship.yazi |
 | `system-clipboard` | Cross platform implementation of a simple system clipboard for yazi file manager | https://github.com/orhnk/system-clipboard.yazi |
+| `toggle-pane` | Toggle the show, hide, and maximize states for different panes | https://github.com/yazi-rs/plugins/tree/main/toggle-pane.yazi |
 | `torrent-preview` | A Yazi plugin for previewing BitTorrent files | https://github.com/kirasok/torrent-preview.yazi |
 | `whossh` |A lightning-fast, keyboard-first bookmark manager for Yazi| https://gitlab.com/WhoSowSee/whoosh.yazi |
 

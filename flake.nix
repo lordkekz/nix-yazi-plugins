@@ -16,6 +16,12 @@
     # Haumea for directory-defined attrset loading
     haumea.url = "github:nix-community/haumea/v0.2.2";
     haumea.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-wrapper-modules.url = "github:nix-community/nix-wrapper-modules";
+    nix-wrapper-modules.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -132,7 +138,7 @@
                         extraConfig = mkOption {
                           type = lib.types.lines;
                           description = "Extra configuration lines to add to ~/.config/yazi/init.lua for ${v.name}";
-                          default = '''';
+                          default = "";
                         };
                       };
                     }
@@ -199,55 +205,266 @@
           lib = inputs.nixpkgs.lib;
           instance = (instantiate_lib lib pkgs);
           inherit (instance) packages;
+          pluginNames = builtins.filter (
+            name:
+            builtins.pathExists (./plugins + "/${name}/hm-module.nix")
+            && (
+              let
+                package = lib.attrByPath [ "yaziPlugins" name ] (instance.YaziPlugins.${name}.package or null) pkgs;
+              in
+              package != null && lib.meta.availableOn pkgs.stdenv.hostPlatform package
+            )
+          ) (builtins.attrNames instance.YaziPlugins);
+          allPlugins = lib.genAttrs pluginNames (_: {
+            enable = true;
+          });
+          allPluginPackages = lib.filterAttrs (
+            _: package: lib.isDerivation package && lib.meta.availableOn pkgs.stdenv.hostPlatform package
+          ) instance.packages;
+          testClipboard = pkgs.writeShellScriptBin "cb" ''
+            printf '%s\n' "$@" > "$YAZI_TEST_OUTPUT"
+          '';
+          configuredPluginPackages =
+            allPluginPackages
+            // lib.genAttrs pluginNames (
+              name: lib.attrByPath [ "yaziPlugins" name ] (instance.YaziPlugins.${name}.package or null) pkgs
+            );
+          testWrapperModule = import ./wrapper-module.nix {
+            inherit lib pkgs;
+            plugins = instance.YaziPlugins;
+            baseWrapper = inputs.nix-wrapper-modules.wrapperModules.yazi;
+          };
+          mkTestYazi =
+            enabledPlugins: pluginConfig:
+            inputs.nix-wrapper-modules.lib.evalPackage [
+              { inherit pkgs; }
+              testWrapperModule
+              {
+                plugins = configuredPluginPackages;
+                yaziPlugins = lib.recursiveUpdate (lib.genAttrs enabledPlugins (_: {
+                  enable = true;
+                })) pluginConfig;
+              }
+            ];
+          mkTestYaziWithSettings =
+            enabledPlugins: pluginConfig: settings:
+            inputs.nix-wrapper-modules.lib.evalPackage [
+              { inherit pkgs; }
+              testWrapperModule
+              {
+                plugins = configuredPluginPackages;
+                yaziPlugins = lib.recursiveUpdate (lib.genAttrs enabledPlugins (_: {
+                  enable = true;
+                })) pluginConfig;
+              }
+              { inherit settings; }
+            ];
+          mkTestYaziWithConfig =
+            enabledPlugins: pluginConfig: extraConfig:
+            inputs.nix-wrapper-modules.lib.evalPackage [
+              { inherit pkgs; }
+              testWrapperModule
+              {
+                plugins = configuredPluginPackages;
+                yaziPlugins = lib.recursiveUpdate (lib.genAttrs enabledPlugins (_: {
+                  enable = true;
+                })) pluginConfig;
+              }
+              extraConfig
+            ];
+          testYazi = mkTestYazi pluginNames (
+            lib.recursiveUpdate allPlugins {
+              bypass.keys.smart-enter.on = [ "<F8>" ];
+              smart-enter.keys.toggle.on = [ "<F9>" ];
+              max-preview.enable = false;
+              hide-preview.enable = false;
+            }
+          );
+          pluginTestYazis = {
+            bypass = mkTestYazi [ "bypass" ] {
+              bypass.keys.smart-enter.on = [ "<F8>" ];
+            };
+            smart-enter = mkTestYazi [ "smart-enter" ] {
+              smart-enter.keys.toggle.on = [ "<F9>" ];
+            };
+            full-border = mkTestYazi [ "full-border" ] { };
+            ouch = mkTestYazi [ "ouch" ] { };
+            torrent-preview = mkTestYazi [ "torrent-preview" ] { };
+            exifaudio = mkTestYazi [ "exifaudio" ] { };
+            chmod = mkTestYazi [ "chmod" ] {
+              chmod.keys.mod.on = [ "<F11>" ];
+            };
+            copy-file-contents = mkTestYazi [ "copy-file-contents" ] {
+              copy-file-contents.keys.mod.on = [ "<F12>" ];
+            };
+            open-with-cmd = mkTestYazi [ "open-with-cmd" ] {
+              open-with-cmd.keys.open_terminal.on = [ "<F12>" ];
+            };
+            smart-filter = mkTestYazi [ "smart-filter" ] {
+              smart-filter.keys.toggle.on = [ "<F12>" ];
+            };
+            jump-to-char = mkTestYazi [ "jump-to-char" ] {
+              jump-to-char.keys.toggle.on = [ "<F12>" ];
+            };
+            relative-motions = mkTestYazi [ "relative-motions" ] {
+              relative-motions.show_motion = true;
+            };
+            bookmarks = mkTestYazi [ "bookmarks" ] {
+              bookmarks.file_pick_mode = "parent";
+              bookmarks.keys.mark.on = [ "<F8>" ];
+              bookmarks.keys.jump.on = [ "<F9>" ];
+            };
+            yamb = mkTestYazi [ "yamb" ] {
+              yamb.bookmarks = [
+                {
+                  tag = "target";
+                  path = "$HOME/stage/target/";
+                  key = "x";
+                }
+              ];
+              yamb.hotkeys.jump.on = [ "<F12>" ];
+            };
+            whoosh = mkTestYazi [ "whoosh" ] {
+              whoosh.bookmarks = [
+                {
+                  tag = "target";
+                  path = "$HOME/stage/target/";
+                  key = "k";
+                }
+              ];
+              whoosh.hotkeys.jump_key_k.on = [ "<F12>" ];
+            };
+            git = mkTestYaziWithSettings [ "git" ] { } {
+              theme.git.untracked_sign = "GIT_UNTRACKED_SENTINEL";
+            };
+            recycle-bin = mkTestYazi [ "recycle-bin" ] {
+              recycle-bin.trash_dir = "$HOME/stage/trash";
+              recycle-bin.keys.open.on = [ "<F12>" ];
+            };
+            toggle-pane = mkTestYazi [ "toggle-pane" ] {
+              toggle-pane.keys.toggle.on = [ "<F12>" ];
+            };
+            starship = mkTestYazi [ "starship" ] {
+              starship.enableStarship = true;
+            };
+            yatline = mkTestYazi [ "yatline" ] {
+              yatline.settings.header_line.right.section_a = [
+                {
+                  type = "string";
+                  custom = false;
+                  name = "date";
+                  params = [ "YATLINE_SENTINEL" ];
+                }
+              ];
+            };
+            rich-preview = mkTestYaziWithConfig [ "rich-preview" ] { } {
+              runtimePkgs = [ pkgs.rich-cli ];
+              settings.yazi.plugin.prepend_previewers = [
+                {
+                  url = "*.py";
+                  run = "rich-preview";
+                }
+              ];
+            };
+            system-clipboard = mkTestYaziWithConfig [ ] { } {
+              runtimePkgs = [ testClipboard ];
+              settings.keymap.mgr.prepend_keymap = [
+                {
+                  on = [ "<F12>" ];
+                  run = "plugin system-clipboard";
+                  desc = "Test system clipboard plugin";
+                }
+              ];
+            };
+          };
+          integrationTests = import ./tests/integration.nix {
+            inherit pkgs;
+            testYazis = pluginTestYazis;
+          };
+          homeManagerYazi = inputs.home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              { imports = instance.homeManagerModulesImports ++ [ ./module.nix ]; }
+              {
+                home.username = "yazi-plugin-tests";
+                home.homeDirectory = "/tmp/yazi-plugin-tests";
+                home.stateVersion = "26.05";
+                programs.yazi.enable = true;
+                programs.yazi.plugins = configuredPluginPackages;
+                programs.yazi.yaziPlugins = {
+                  enable = true;
+                  plugins = allPlugins // {
+                    max-preview.enable = false;
+                    hide-preview.enable = false;
+                  };
+                };
+              }
+            ];
+          };
         in
         {
           formatter = pkgs.nixfmt-tree;
-          packages = packages // {
-            update = pkgs.writeShellScriptBin "update" ''
-              ${lib.getExe pkgs.nix-update} $1 --flake --version=branch
-            '';
-            # this package definition was generated using Claude Sonnet 5 Medium
-            update-all-commit = pkgs.writeShellScriptBin "update-all-commit" ''
-              set -uo pipefail
+          checks = {
+            all-plugins-build = testYazi;
+            home-manager-all-plugins-build = homeManagerYazi.activationPackage;
+            plugins-e2e = integrationTests.aggregate;
+          }
+          // lib.mapAttrs' (
+            name: check: lib.nameValuePair "plugin-${name}-e2e" check
+          ) integrationTests.checks;
+          # Nixpkgs exposes helper attrs alongside derivations in yaziPlugins,
+          # the flake `packages` output must contain derivations only.
+          # With `nix flake check` this would be an error. Usually it is only a warning.
+          packages =
+            lib.filterAttrs (
+              _: package: lib.isDerivation package && lib.meta.availableOn pkgs.stdenv.hostPlatform package
+            ) packages
+            // {
+              update = pkgs.writeShellScriptBin "update" ''
+                ${lib.getExe pkgs.nix-update} $1 --flake --version=branch
+              '';
+              # this package definition was generated using Claude Sonnet 5 Medium
+              update-all-commit = pkgs.writeShellScriptBin "update-all-commit" ''
+                set -uo pipefail
 
-              root="$(${lib.getExe pkgs.git} rev-parse --show-toplevel)"
-              cd "$root"
+                root="$(${lib.getExe pkgs.git} rev-parse --show-toplevel)"
+                cd "$root"
 
-              system="$(${lib.getExe pkgs.nix} eval --raw --impure --expr builtins.currentSystem)"
+                system="$(${lib.getExe pkgs.nix} eval --raw --impure --expr builtins.currentSystem)"
 
-              for dir in plugins/*/; do
-                plugin="$(basename "$dir")"
-                pkg_file="plugins/$plugin/package.nix"
+                for dir in plugins/*/; do
+                  plugin="$(basename "$dir")"
+                  pkg_file="plugins/$plugin/package.nix"
 
-                if [ ! -f "$pkg_file" ]; then
-                  echo "skip $plugin (no $pkg_file)"
-                  continue
-                fi
+                  if [ ! -f "$pkg_file" ]; then
+                    echo "skip $plugin (no $pkg_file)"
+                    continue
+                  fi
 
-                old_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev" 2>/dev/null)"
-                if [ -z "$old_rev" ]; then
-                  echo "skip $plugin (couldn't eval src.rev, currently broken?)"
-                  continue
-                fi
+                  old_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev" 2>/dev/null)"
+                  if [ -z "$old_rev" ]; then
+                    echo "skip $plugin (couldn't eval src.rev, currently broken?)"
+                    continue
+                  fi
 
-                if ! ${lib.getExe pkgs.nix-update} "$plugin" --flake --version=branch; then
-                  echo "skip $plugin (nix-update failed)"
-                  ${lib.getExe pkgs.git} checkout -- "$pkg_file"
-                  continue
-                fi
+                  if ! ${lib.getExe pkgs.nix-update} "$plugin" --flake --version=branch; then
+                    echo "skip $plugin (nix-update failed)"
+                    ${lib.getExe pkgs.git} checkout -- "$pkg_file"
+                    continue
+                  fi
 
-                if ${lib.getExe pkgs.git} diff --quiet -- "$pkg_file"; then
-                  echo "up to date: $plugin"
-                  continue
-                fi
+                  if ${lib.getExe pkgs.git} diff --quiet -- "$pkg_file"; then
+                    echo "up to date: $plugin"
+                    continue
+                  fi
 
-                new_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev")"
+                  new_rev="$(${lib.getExe pkgs.nix} eval --raw ".#packages.$system.$plugin.src.rev")"
 
-                ${lib.getExe pkgs.git} add "$pkg_file"
-                ${lib.getExe pkgs.git} commit -m "feat($plugin): update package from ''${old_rev:0:7} to ''${new_rev:0:7}"
-              done
-            '';
-          };
+                  ${lib.getExe pkgs.git} add "$pkg_file"
+                  ${lib.getExe pkgs.git} commit -m "feat($plugin): update package from ''${old_rev:0:7} to ''${new_rev:0:7}"
+                done
+              '';
+            };
           legacyPackages = {
             homeManagerModules = rec {
               yaziPlugins =
@@ -267,5 +484,14 @@
 
       overlays.default = final: prev: { yaziPlugins = (instantiate_lib (final.lib) prev).packages; };
 
+    }
+    // {
+      wrapperModules.yaziWithPlugins =
+        { lib, pkgs, ... }@args:
+        import ./wrapper-module.nix {
+          inherit lib pkgs;
+          plugins = (instantiate_lib lib pkgs).YaziPlugins;
+          baseWrapper = inputs.nix-wrapper-modules.wrapperModules.yazi;
+        } args;
     };
 }

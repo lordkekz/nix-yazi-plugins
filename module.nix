@@ -11,6 +11,30 @@ in
 {
   options.programs.yazi.yaziPlugins = {
     enable = mkEnableOption "yaziPlugins";
+    plugins.max-preview = mkOption {
+      type = lib.types.submodule {
+        options.enable = mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Deprecated max-preview plugin; use toggle-pane instead.";
+        };
+        freeformType = lib.types.attrsOf lib.types.anything;
+      };
+      default = { };
+      description = "Deprecated max-preview plugin configuration; use toggle-pane instead.";
+    };
+    plugins.hide-preview = mkOption {
+      type = lib.types.submodule {
+        options.enable = mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Deprecated hide-preview plugin option; see the migration message.";
+        };
+        freeformType = lib.types.attrsOf lib.types.anything;
+      };
+      default = { };
+      description = "Removed hide-preview plugin configuration.";
+    };
     runtimeDeps = mkOption {
       type = lib.types.listOf (lib.types.either lib.types.package lib.types.str);
       description = ''
@@ -54,10 +78,23 @@ in
     extraConfig = mkOption {
       type = lib.types.lines;
       description = "Extra configuration lines to add to ~/.config/yazi/init.lua";
-      default = '''';
+      default = "";
     };
   };
   config = {
+    assertions = [
+      {
+        assertion =
+          !(cfg.plugins.max-preview.enable or false)
+          && builtins.removeAttrs cfg.plugins.max-preview [ "enable" ] == { }
+          && !(cfg.plugins.hide-preview.enable or false)
+          && builtins.removeAttrs cfg.plugins.hide-preview [ "enable" ] == { };
+        message = ''
+          The `max-preview` and `hide-preview` plugins for Yazi have been removed
+          in favor of `toggle-pane`. Please remove them from your Yazi wrapper config.
+        '';
+      }
+    ];
     programs.yazi = {
       package = lib.mkIf (cfg.runtimeDeps != [ ]) (
         pkgs.yazi.override {

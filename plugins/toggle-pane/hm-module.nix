@@ -4,9 +4,9 @@
     _: {
       keys = {
         toggle = mkKeyOption {
-          on = [ "T" ];
-          run = "plugin hide-preview";
-          desc = "Hide or show preview";
+          on = [ "R" ];
+          run = "plugin toggle-pane max-preview";
+          desc = "Maximize or restore preview";
         };
       };
     };
