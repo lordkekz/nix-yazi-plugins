@@ -262,6 +262,7 @@
             glow = mkTestYazi [ "glow" ] { };
             ouch = mkTestYazi [ "ouch" ] { };
             torrent-preview = mkTestYazi [ "torrent-preview" ] { };
+            exifaudio = mkTestYazi [ "exifaudio" ] { };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

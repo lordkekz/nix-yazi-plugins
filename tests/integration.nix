@@ -93,6 +93,24 @@ let
       afterMarker = "TORRENT_PREVIEW_SENTINEL";
       afterMarkerState = "present";
     };
+    exifaudio = {
+      yazi = testYazis.exifaudio;
+      setup = ''
+        ${lib.getExe pkgs.python3} - "$stage/test.wav" <<'PY'
+        import wave
+
+        with wave.open(__import__("sys").argv[1], "wb") as output:
+            output.setnchannels(1)
+            output.setsampwidth(2)
+            output.setframerate(8000)
+            output.writeframes(b"\0\0" * 8000)
+        PY
+      '';
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "8000";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
@@ -182,8 +200,7 @@ let
 
         sleep 0.5
         ${lib.concatMapStringsSep "\n" (
-          key:
-          lib.optionalString (key != "NONE") ''
+          key: lib.optionalString (key != "NONE") ''
             tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
           ''
         ) test.keys}
@@ -212,7 +229,6 @@ let
           tmux -S "$socket" -f /dev/null capture-pane -p -t "$session" >&2 || true
           exit 1
         fi
-
         mkdir -p "$out"
         printf '%s\n' '${name} integration passed' > "$out/result"
       ''
