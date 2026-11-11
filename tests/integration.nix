@@ -57,6 +57,42 @@ let
       afterMarker = "OUCH_ARCHIVE_MEMBER";
       afterMarkerState = "present";
     };
+    torrent-preview = {
+      yazi = testYazis.torrent-preview;
+      setup = ''
+        ${lib.getExe pkgs.python3} - "$stage/test.torrent" <<'PY'
+        def bencode(value):
+            if isinstance(value, int):
+                return b"i" + str(value).encode() + b"e"
+            if isinstance(value, bytes):
+                return str(len(value)).encode() + b":" + value
+            if isinstance(value, list):
+                return b"l" + b"".join(bencode(item) for item in value) + b"e"
+            if isinstance(value, dict):
+                return b"d" + b"".join(
+                    bencode(key) + bencode(value[key]) for key in sorted(value)
+                ) + b"e"
+            raise TypeError(value)
+
+        info = {
+            b"length": 0,
+            b"name": b"TORRENT_PREVIEW_SENTINEL",
+            b"piece length": 16384,
+            b"pieces": b"",
+        }
+        torrent = {
+            b"announce": b"https://tracker.invalid/announce",
+            b"info": info,
+        }
+        with open(__import__("sys").argv[1], "wb") as output:
+            output.write(bencode(torrent))
+        PY
+      '';
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "TORRENT_PREVIEW_SENTINEL";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
@@ -66,6 +102,7 @@ let
         nativeBuildInputs = [
           pkgs.coreutils
           pkgs.gnutar
+          pkgs.python3
           pkgs.tmux
         ];
       }

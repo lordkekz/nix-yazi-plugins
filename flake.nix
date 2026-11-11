@@ -261,6 +261,7 @@
             full-border = mkTestYazi [ "full-border" ] { };
             glow = mkTestYazi [ "glow" ] { };
             ouch = mkTestYazi [ "ouch" ] { };
+            torrent-preview = mkTestYazi [ "torrent-preview" ] { };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
