@@ -57,6 +57,59 @@ example usage inside home-manager:
   };
 ```
 
+### nix-wrapper-modules
+
+The flake also exports `wrapperModules.yaziWithPlugins`. It extends the
+original `nix-wrapper-modules` Yazi wrapper, retaining its configuration
+options while adding plugin enablement and Home-Manager-style plugin settings.
+Add `nix-wrapper-modules` to your flake inputs:
+
+```nix
+{
+  inputs = {
+    nix-wrapper-modules = {
+      url = "github:nix-community/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-yazi-plugins = {
+      url = "github:lordkekz/nix-yazi-plugins?ref=yazi-v0.2.5";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nix-wrapper-modules.follows = "nix-wrapper-modules";
+    };
+  };
+
+  outputs = { self, nixpkgs, nix-wrapper-modules, nix-yazi-plugins, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      packages.${system}.yazi = nix-wrapper-modules.lib.evalPackage [
+        { inherit pkgs; }
+        nix-yazi-plugins.wrapperModules.yaziWithPlugins
+        {
+          yaziPlugins = {
+            starship.enable = true;
+            relative-motions = {
+              enable = true;
+              show_numbers = "relative_absolute";
+              show_motion = true;
+            };
+          };
+        }
+      ];
+    };
+}
+```
+
+The `yaziPlugins.<name>` options — including plugin-specific settings and
+keymaps — are shared with the Home Manager modules. The original wrapper's
+`plugins` option remains available for adding packages directly, along with its
+settings, flavors, and other configuration options. The wrapper sets
+`YAZI_CONFIG_HOME` to its generated, read-only configuration directory. For
+plugins that save persistent data under a home directory, `$HOME` is expanded
+at runtime by default; set `homeDirectory` to override it.
+
 ## Branches & Compatibility
 I try to support the latest release and the latest git of Yazi.
 If you run the unstable version, use the `main` branch.

@@ -16,6 +16,9 @@
     # Haumea for directory-defined attrset loading
     haumea.url = "github:nix-community/haumea/v0.2.2";
     haumea.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-wrapper-modules.url = "github:nix-community/nix-wrapper-modules";
+    nix-wrapper-modules.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -267,5 +270,14 @@
 
       overlays.default = final: prev: { yaziPlugins = (instantiate_lib (final.lib) prev).packages; };
 
+    }
+    // {
+      wrapperModules.yaziWithPlugins =
+        { lib, pkgs, ... }@args:
+        import ./wrapper-module.nix {
+          inherit lib pkgs;
+          plugins = (instantiate_lib lib pkgs).YaziPlugins;
+          baseWrapper = inputs.nix-wrapper-modules.wrapperModules.yazi;
+        } args;
     };
 }
