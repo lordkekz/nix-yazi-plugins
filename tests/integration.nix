@@ -127,6 +127,16 @@ let
         [ "$(stat -c '%a' "$stage/mode.txt")" = 600 ]
       '';
     };
+    copy-file-contents = {
+      yazi = testYazis.copy-file-contents;
+      setup = ''
+        printf '%s\n' 'COPY_CONTENTS_SENTINEL' > "$stage/content.txt"
+      '';
+      keys = [ "F12" ];
+      expectedCwd = "/";
+      afterMarker = "Copied 1 file(s) contents to clipboard";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (

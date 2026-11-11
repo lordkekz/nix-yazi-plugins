@@ -266,6 +266,9 @@
             chmod = mkTestYazi [ "chmod" ] {
               chmod.keys.mod.on = [ "<F11>" ];
             };
+            copy-file-contents = mkTestYazi [ "copy-file-contents" ] {
+              copy-file-contents.keys.mod.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
