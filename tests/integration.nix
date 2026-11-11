@@ -39,6 +39,17 @@ let
       keys = [ "F9" ];
       expectedCwd = "/one-level";
     };
+    smart-enter-open = {
+      yazi = testYazis.smart-enter;
+      setup = ''
+        : > "$stage/SMART_ENTER_FILE_SENTINEL.txt"
+      '';
+      keys = [ "F9" ];
+      expectedCwd = "/";
+      verify = ''
+        [ "$(cat "$YAZI_TEST_CHOOSER_FILE")" = "$stage/SMART_ENTER_FILE_SENTINEL.txt" ]
+      '';
+    };
     full-border = {
       yazi = testYazis.full-border;
       setup = "";
