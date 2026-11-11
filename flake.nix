@@ -19,6 +19,9 @@
 
     nix-wrapper-modules.url = "github:nix-community/nix-wrapper-modules";
     nix-wrapper-modules.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -235,14 +238,37 @@
               yaziPlugins = lib.recursiveUpdate allPlugins {
                 bypass.keys.smart-enter.on = [ "<F8>" ];
                 smart-enter.keys.toggle.on = [ "<F9>" ];
+                max-preview.enable = false;
+                hide-preview.enable = false;
               };
             }
           ];
+          homeManagerYazi = inputs.home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              { imports = instance.homeManagerModulesImports ++ [ ./module.nix ]; }
+              {
+                home.username = "yazi-plugin-tests";
+                home.homeDirectory = "/tmp/yazi-plugin-tests";
+                home.stateVersion = "26.05";
+                programs.yazi.enable = true;
+                programs.yazi.plugins = configuredPluginPackages;
+                programs.yazi.yaziPlugins = {
+                  enable = true;
+                  plugins = allPlugins // {
+                    max-preview.enable = false;
+                    hide-preview.enable = false;
+                  };
+                };
+              }
+            ];
+          };
         in
         {
           formatter = pkgs.nixfmt-tree;
           checks = {
             all-plugins-build = testYazi;
+            home-manager-all-plugins-build = homeManagerYazi.activationPackage;
             plugins-e2e = import ./tests/integration.nix {
               inherit pkgs testYazi;
             };
