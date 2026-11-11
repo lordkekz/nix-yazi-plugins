@@ -269,6 +269,9 @@
             copy-file-contents = mkTestYazi [ "copy-file-contents" ] {
               copy-file-contents.keys.mod.on = [ "<F12>" ];
             };
+            open-with-cmd = mkTestYazi [ "open-with-cmd" ] {
+              open-with-cmd.keys.open_terminal.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

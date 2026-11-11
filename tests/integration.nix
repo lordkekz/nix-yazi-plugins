@@ -137,6 +137,18 @@ let
       afterMarker = "Copied 1 file(s) contents to clipboard";
       afterMarkerState = "present";
     };
+    open-with-cmd = {
+      yazi = testYazis.open-with-cmd;
+      setup = ''
+        : > "$stage/input.txt"
+      '';
+      keys = [
+        "F12"
+        "WAIT:Open with (block):"
+        "C-c"
+      ];
+      expectedCwd = "/";
+    };
   };
 
   checks = lib.mapAttrs (
@@ -229,6 +241,12 @@ let
           key:
           if key == "NONE" then
             ""
+          else if lib.hasPrefix "WAIT:" key then
+            ''
+              wait_for_marker ${
+                lib.escapeShellArg (builtins.substring 5 (builtins.stringLength key - 5) key)
+              } present
+            ''
           else if lib.hasPrefix "TEXT:" key then
             ''
               tmux -S "$socket" -f /dev/null send-keys -t "$session" -l ${
@@ -249,6 +267,10 @@ let
             lib.escapeShellArg (test.afterMarkerState or "present")
           }
         ''}
+
+        ${lib.concatMapStringsSep "\n" (key: ''
+          tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
+        '') (test.cleanupKeys or [ ])}
 
         tmux -S "$socket" -f /dev/null send-keys -t "$session" q
         for _ in $(seq 1 100); do
