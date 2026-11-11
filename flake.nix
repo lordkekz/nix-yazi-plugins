@@ -256,6 +256,19 @@
               }
               { inherit settings; }
             ];
+          mkTestYaziWithConfig =
+            enabledPlugins: pluginConfig: extraConfig:
+            inputs.nix-wrapper-modules.lib.evalPackage [
+              { inherit pkgs; }
+              testWrapperModule
+              {
+                plugins = configuredPluginPackages;
+                yaziPlugins = lib.recursiveUpdate (lib.genAttrs enabledPlugins (_: {
+                  enable = true;
+                })) pluginConfig;
+              }
+              extraConfig
+            ];
           testYazi = mkTestYazi pluginNames (
             lib.recursiveUpdate allPlugins {
               bypass.keys.smart-enter.on = [ "<F8>" ];
@@ -335,6 +348,15 @@
                   custom = false;
                   name = "date";
                   params = [ "YATLINE_SENTINEL" ];
+                }
+              ];
+            };
+            rich-preview = mkTestYaziWithConfig [ "rich-preview" ] { } {
+              runtimePkgs = [ pkgs.rich-cli ];
+              settings.yazi.plugin.prepend_previewers = [
+                {
+                  url = "*.py";
+                  run = "rich-preview";
                 }
               ];
             };

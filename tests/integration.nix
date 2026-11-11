@@ -278,6 +278,16 @@ let
       afterMarker = "YATLINE_SENTINEL";
       afterMarkerState = "present";
     };
+    rich-preview = {
+      yazi = testYazis.rich-preview;
+      setup = ''
+        printf '%s\n' 'RICH_PREVIEW_SENTINEL' > "$stage/preview.py"
+      '';
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "RICH_PREVIEW_SENTINEL";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
