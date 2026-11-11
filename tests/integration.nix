@@ -256,6 +256,20 @@ let
         expected = 1;
       };
     };
+    starship = {
+      yazi = testYazis.starship;
+      setup = ''
+        mkdir -p "$work/home/.config"
+        cat > "$work/home/.config/starship.toml" <<'EOF'
+        format = '[STARSHIP_SENTINEL](bold green)'
+        EOF
+        export STARSHIP_CONFIG="$work/home/.config/starship.toml"
+      '';
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "STARSHIP_SENTINEL";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (

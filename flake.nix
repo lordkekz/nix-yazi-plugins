@@ -325,6 +325,9 @@
             toggle-pane = mkTestYazi [ "toggle-pane" ] {
               toggle-pane.keys.toggle.on = [ "<F12>" ];
             };
+            starship = mkTestYazi [ "starship" ] {
+              starship.enableStarship = true;
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
