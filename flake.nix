@@ -263,6 +263,9 @@
             ouch = mkTestYazi [ "ouch" ] { };
             torrent-preview = mkTestYazi [ "torrent-preview" ] { };
             exifaudio = mkTestYazi [ "exifaudio" ] { };
+            chmod = mkTestYazi [ "chmod" ] {
+              chmod.keys.mod.on = [ "<F11>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

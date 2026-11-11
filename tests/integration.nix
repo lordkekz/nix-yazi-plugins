@@ -111,6 +111,22 @@ let
       afterMarker = "8000";
       afterMarkerState = "present";
     };
+    chmod = {
+      yazi = testYazis.chmod;
+      setup = ''
+        printf '%s\n' 'CHMOD_SENTINEL' > "$stage/mode.txt"
+        chmod 644 "$stage/mode.txt"
+      '';
+      keys = [
+        "F11"
+        "TEXT:600"
+        "Enter"
+      ];
+      expectedCwd = "/";
+      verify = ''
+        [ "$(stat -c '%a' "$stage/mode.txt")" = 600 ]
+      '';
+    };
   };
 
   checks = lib.mapAttrs (
@@ -200,9 +216,21 @@ let
 
         sleep 0.5
         ${lib.concatMapStringsSep "\n" (
-          key: lib.optionalString (key != "NONE") ''
-            tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
-          ''
+          key:
+          if key == "NONE" then
+            ""
+          else if lib.hasPrefix "TEXT:" key then
+            ''
+              tmux -S "$socket" -f /dev/null send-keys -t "$session" -l ${
+                lib.escapeShellArg (builtins.substring 5 (builtins.stringLength key - 5) key)
+              }
+              sleep 0.2
+            ''
+          else
+            ''
+              tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
+              sleep 0.2
+            ''
         ) test.keys}
         sleep 0.5
 
@@ -229,6 +257,7 @@ let
           tmux -S "$socket" -f /dev/null capture-pane -p -t "$session" >&2 || true
           exit 1
         fi
+        ${test.verify or ""}
         mkdir -p "$out"
         printf '%s\n' '${name} integration passed' > "$out/result"
       ''
