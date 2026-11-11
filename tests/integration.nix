@@ -232,22 +232,16 @@ let
       keys = [ "F12" ];
       expectedCwd = "/target";
     };
-    recycle-bin = {
-      yazi = testYazis.recycle-bin;
+    git = {
+      yazi = testYazis.git;
       setup = ''
-        mkdir -p "$stage/trash/files" "$stage/trash/info"
-        : > "$stage/trash/files/RECYCLE_BIN_SENTINEL.txt"
-        printf '%s\n' '[Trash Info]' 'Path=/original/RECYCLE_BIN_SENTINEL.txt' 'DeletionDate=2026-11-11T00:00:00' > "$stage/trash/info/RECYCLE_BIN_SENTINEL.txt.trashinfo"
+        git -C "$stage" init --quiet
+        : > "$stage/GIT_STATUS_FILE.txt"
       '';
-      stageInHome = true;
-      keys = [
-        "F12"
-        "WAIT:Open Trash"
-      ];
+      keys = [ "NONE" ];
       expectedCwd = "/";
-      afterMarker = "Open Trash";
+      afterMarker = "GIT_UNTRACKED_SENTINEL";
       afterMarkerState = "present";
-      cleanupKeys = [ "Escape" ];
     };
   };
 
@@ -258,6 +252,7 @@ let
         nativeBuildInputs = [
           pkgs.coreutils
           pkgs.gnutar
+          pkgs.git
           pkgs.python3
           pkgs.tmux
         ];
@@ -369,10 +364,6 @@ let
             lib.escapeShellArg (test.afterMarkerState or "present")
           }
         ''}
-
-        ${lib.concatMapStringsSep "\n" (key: ''
-          tmux -S "$socket" -f /dev/null send-keys -t "$session" ${lib.escapeShellArg key}
-        '') (test.cleanupKeys or [ ])}
 
         tmux -S "$socket" -f /dev/null send-keys -t "$session" q
         for _ in $(seq 1 100); do

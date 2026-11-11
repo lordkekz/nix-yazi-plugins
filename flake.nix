@@ -243,6 +243,19 @@
                 })) pluginConfig;
               }
             ];
+          mkTestYaziWithSettings =
+            enabledPlugins: pluginConfig: settings:
+            inputs.nix-wrapper-modules.lib.evalPackage [
+              { inherit pkgs; }
+              testWrapperModule
+              {
+                plugins = configuredPluginPackages;
+                yaziPlugins = lib.recursiveUpdate (lib.genAttrs enabledPlugins (_: {
+                  enable = true;
+                })) pluginConfig;
+              }
+              { inherit settings; }
+            ];
           testYazi = mkTestYazi pluginNames (
             lib.recursiveUpdate allPlugins {
               bypass.keys.smart-enter.on = [ "<F8>" ];
@@ -306,9 +319,8 @@
               ];
               whoosh.hotkeys.jump_key_k.on = [ "<F12>" ];
             };
-            recycle-bin = mkTestYazi [ "recycle-bin" ] {
-              recycle-bin.trash_dir = "$HOME/stage/trash";
-              recycle-bin.keys.open.on = [ "<F12>" ];
+            git = mkTestYaziWithSettings [ "git" ] { } {
+              theme.git.untracked_sign = "GIT_UNTRACKED_SENTINEL";
             };
           };
           integrationTests = import ./tests/integration.nix {
