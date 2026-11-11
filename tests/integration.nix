@@ -327,6 +327,25 @@ let
       afterMarker = "RICH_PREVIEW_SENTINEL";
       afterMarkerState = "present";
     };
+    system-clipboard = {
+      yazi = testYazis.system-clipboard;
+      setup = ''
+        : > "$stage/SYSTEM_CLIPBOARD_SENTINEL.txt"
+        export YAZI_TEST_OUTPUT="$work/system-clipboard-args"
+      '';
+      keys = [ "F12" ];
+      expectedCwd = "/";
+      verify = ''
+        clipboard_args="$(cat "$YAZI_TEST_OUTPUT")"
+        case "$clipboard_args" in
+          *"$stage/SYSTEM_CLIPBOARD_SENTINEL.txt"*) ;;
+          *)
+            echo "clipboard command did not receive the selected file: $clipboard_args" >&2
+            exit 1
+            ;;
+        esac
+      '';
+    };
   };
 
   checks = lib.mapAttrs (

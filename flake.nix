@@ -221,6 +221,9 @@
           allPluginPackages = lib.filterAttrs (
             _: package: lib.isDerivation package && lib.meta.availableOn pkgs.stdenv.hostPlatform package
           ) instance.packages;
+          testClipboard = pkgs.writeShellScriptBin "cb" ''
+            printf '%s\n' "$@" > "$YAZI_TEST_OUTPUT"
+          '';
           configuredPluginPackages =
             allPluginPackages
             // lib.genAttrs pluginNames (
@@ -361,6 +364,16 @@
                 {
                   url = "*.py";
                   run = "rich-preview";
+                }
+              ];
+            };
+            system-clipboard = mkTestYaziWithConfig [ ] { } {
+              runtimePkgs = [ testClipboard ];
+              settings.keymap.mgr.prepend_keymap = [
+                {
+                  on = [ "<F12>" ];
+                  run = "plugin system-clipboard";
+                  desc = "Test system clipboard plugin";
                 }
               ];
             };
