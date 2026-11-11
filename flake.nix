@@ -275,6 +275,9 @@
             smart-filter = mkTestYazi [ "smart-filter" ] {
               smart-filter.keys.toggle.on = [ "<F12>" ];
             };
+            jump-to-char = mkTestYazi [ "jump-to-char" ] {
+              jump-to-char.keys.toggle.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

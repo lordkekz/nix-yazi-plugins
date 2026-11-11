@@ -5,7 +5,8 @@
 let
   lib = pkgs.lib;
   runYazi = pkgs.writeShellScript "run-yazi-plugin-e2e" ''
-    exec "$YAZI_TEST_BINARY" --cwd-file "$YAZI_TEST_CWD_FILE" "$YAZI_TEST_START_DIR"
+    exec "$YAZI_TEST_BINARY" --cwd-file "$YAZI_TEST_CWD_FILE" \
+      --chooser-file "$YAZI_TEST_CHOOSER_FILE" "$YAZI_TEST_START_DIR"
   '';
 
   testCases = {
@@ -162,6 +163,22 @@ let
       ];
       expectedCwd = "/target-dir";
     };
+    jump-to-char = {
+      yazi = testYazis.jump-to-char;
+      setup = ''
+        : > "$stage/alpha.txt"
+        : > "$stage/zulu.txt"
+      '';
+      keys = [
+        "F12"
+        "z"
+        "o"
+      ];
+      expectedCwd = "/";
+      verify = ''
+        [ "$(cat "$YAZI_TEST_CHOOSER_FILE")" = "$stage/zulu.txt" ]
+      '';
+    };
   };
 
   checks = lib.mapAttrs (
@@ -193,6 +210,7 @@ let
         export YAZI_TEST_BINARY=${lib.escapeShellArg (lib.getExe test.yazi)}
         export YAZI_TEST_START_DIR="$stage${test.startDir or "/"}"
         export YAZI_TEST_CWD_FILE="$work/cwd"
+        export YAZI_TEST_CHOOSER_FILE="$work/chooser"
         unset TMUX DISPLAY WAYLAND_DISPLAY DBUS_SESSION_BUS_ADDRESS XAUTHORITY
 
         cleanup() {
