@@ -127,9 +127,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `full-border` | Add a full border to Yazi to make it look fancier | https://github.com/yazi-rs/plugins/tree/main/full-border.yazi|
 | `git` | Show the status of Git file changes as linemode in the file list | https://github.com/yazi-rs/plugins/tree/main/git.yazi|
 | `glow` | Plugin for Yazi to preview markdown files with glow | https://github.com/Reledia/glow.yazi |
-| `hide-preview` | Switch the preview pane between hidden and shown | https://github.com/yazi-rs/plugins/tree/main/hide-preview.yazi |
 | `jump-to-char` | Vim-like f<char>, jump to the next file whose name starts with <char> | https://github.com/yazi-rs/plugins/tree/main/jump-to-char.yazi |
-| `max-preview` | Maximize or restore the preview pane | https://github.com/yazi-rs/plugins/tree/main/max-preview.yazi |
 | `open-with-cmd` | This is a Yazi plugin for opening files with a prompted command. | https://github.com/Ape/open-with-cmd.yazi |
 | `ouch` | A Yazi plugin to preview archives | https://github.com/ndtoan96/ouch.yazi |
 | `recycle-bin` | Comprehensive trash management for Yazi with browse, restore, and delete capabilities | https://github.com/uhs-robert/recycle-bin.yazi |
@@ -139,6 +137,7 @@ If you run the release version, use the corresponding branch, for example `yazi-
 | `smart-filter` | A Yazi plugin that makes filters smarter: continuous filtering, automatically enter unique directory, open file on submitting | https://github.com/yazi-rs/plugins/tree/main/smart-filter.yazi |
 | `starship` | Show starship prompt in header | https://github.com/Rolv-Apneseth/starship.yazi |
 | `system-clipboard` | Cross platform implementation of a simple system clipboard for yazi file manager | https://github.com/orhnk/system-clipboard.yazi |
+| `toggle-pane` | Toggle the show, hide, and maximize states for different panes | https://github.com/yazi-rs/plugins/tree/main/toggle-pane.yazi |
 | `torrent-preview` | A Yazi plugin for previewing BitTorrent files | https://github.com/kirasok/torrent-preview.yazi |
 | `whossh` |A lightning-fast, keyboard-first bookmark manager for Yazi| https://gitlab.com/WhoSowSee/whoosh.yazi |
 

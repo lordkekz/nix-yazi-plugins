@@ -120,7 +120,19 @@ let
     ] ++ (lib.mapAttrsToList moduleConfigFor plugins);
   };
 
-  yaziConfig = evaluated.config.programs.yazi or { };
+  yaziConfig =
+    assert lib.asserts.assertMsg
+      (
+        !(config.yaziPlugins.max-preview.enable or false)
+        && builtins.removeAttrs config.yaziPlugins.max-preview [ "enable" ] == { }
+        && !(config.yaziPlugins.hide-preview.enable or false)
+        && builtins.removeAttrs config.yaziPlugins.hide-preview [ "enable" ] == { }
+      )
+      ''
+        The `max-preview` and `hide-preview` plugins for Yazi have been removed
+        in favor of `toggle-pane`. Please remove them from your Yazi wrapper config.
+      '';
+    evaluated.config.programs.yazi or { };
   yaziPlugins = yaziConfig.yaziPlugins or { };
   settings = yaziConfig.settings or { };
   keymap = yaziConfig.keymap or { };
@@ -184,7 +196,32 @@ in
       '';
     };
 
-    yaziPlugins = pluginOptions;
+    yaziPlugins = pluginOptions // {
+      max-preview = lib.mkOption {
+        type = lib.types.submodule {
+          options.enable = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = "Deprecated max-preview plugin; use toggle-pane instead.";
+          };
+          freeformType = lib.types.attrsOf lib.types.anything;
+        };
+        default = { };
+        description = "Deprecated max-preview plugin configuration; use toggle-pane instead.";
+      };
+      hide-preview = lib.mkOption {
+        type = lib.types.submodule {
+          options.enable = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = "Deprecated hide-preview plugin option; see the migration message.";
+          };
+          freeformType = lib.types.attrsOf lib.types.anything;
+        };
+        default = { };
+        description = "Removed hide-preview plugin configuration.";
+      };
+    };
   };
 
   config = {
