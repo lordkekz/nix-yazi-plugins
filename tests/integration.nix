@@ -209,6 +209,19 @@ let
       ];
       expectedCwd = "/";
     };
+    yamb = {
+      yazi = testYazis.yamb;
+      setup = ''
+        mkdir -p "$stage/target"
+        : > "$stage/target/sentinel"
+      '';
+      stageInHome = true;
+      keys = [
+        "F12"
+        "x"
+      ];
+      expectedCwd = "/target";
+    };
   };
 
   checks = lib.mapAttrs (
@@ -226,7 +239,7 @@ let
         set -euo pipefail
 
         work="$TMPDIR/yazi-plugin-${name}-e2e"
-        stage="$work/stage"
+        stage="$work${if test.stageInHome or false then "/home" else ""}/stage"
         socket="$work/tmux.sock"
         session="yazi-plugin-${name}"
         mkdir -p "$work/home" "$work/config" "$work/data" "$work/cache" "$stage"

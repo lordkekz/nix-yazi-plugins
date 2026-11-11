@@ -286,6 +286,16 @@
               bookmarks.keys.mark.on = [ "<F8>" ];
               bookmarks.keys.jump.on = [ "<F9>" ];
             };
+            yamb = mkTestYazi [ "yamb" ] {
+              yamb.bookmarks = [
+                {
+                  tag = "target";
+                  path = "$HOME/stage/target/";
+                  key = "x";
+                }
+              ];
+              yamb.hotkeys.jump.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;
