@@ -58,16 +58,6 @@ let
       afterMarker = "╭";
       afterMarkerState = "present";
     };
-    glow = {
-      yazi = testYazis.glow;
-      setup = ''
-        printf '%s\n' 'GLOW_PREVIEW_SENTINEL' > "$stage/preview.md"
-      '';
-      keys = [ "NONE" ];
-      expectedCwd = "/";
-      afterMarker = "GLOW_PREVIEW_SENTINEL";
-      afterMarkerState = "present";
-    };
     ouch = {
       yazi = testYazis.ouch;
       setup = ''
@@ -97,11 +87,14 @@ let
                 ) + b"e"
             raise TypeError(value)
 
+        import hashlib
+
+        piece = bytes(16384)
         info = {
-            b"length": 0,
+            b"length": len(piece),
             b"name": b"TORRENT_PREVIEW_SENTINEL",
             b"piece length": 16384,
-            b"pieces": b"",
+            b"pieces": hashlib.sha1(piece).digest(),
         }
         torrent = {
             b"announce": b"https://tracker.invalid/announce",

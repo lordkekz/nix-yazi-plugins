@@ -14,6 +14,10 @@
             mime = "application/bittorrent";
             run = "torrent-preview";
           }
+          {
+            mime = "application/x-bittorrent";
+            run = "torrent-preview";
+          }
         ];
 
         yaziPlugins = {

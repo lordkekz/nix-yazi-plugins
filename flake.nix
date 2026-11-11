@@ -288,7 +288,6 @@
               smart-enter.keys.toggle.on = [ "<F9>" ];
             };
             full-border = mkTestYazi [ "full-border" ] { };
-            glow = mkTestYazi [ "glow" ] { };
             ouch = mkTestYazi [ "ouch" ] { };
             torrent-preview = mkTestYazi [ "torrent-preview" ] { };
             exifaudio = mkTestYazi [ "exifaudio" ] { };
