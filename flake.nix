@@ -328,6 +328,16 @@
             starship = mkTestYazi [ "starship" ] {
               starship.enableStarship = true;
             };
+            yatline = mkTestYazi [ "yatline" ] {
+              yatline.settings.header_line.right.section_a = [
+                {
+                  type = "string";
+                  custom = false;
+                  name = "date";
+                  params = [ "YATLINE_SENTINEL" ];
+                }
+              ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

@@ -270,6 +270,14 @@ let
       afterMarker = "STARSHIP_SENTINEL";
       afterMarkerState = "present";
     };
+    yatline = {
+      yazi = testYazis.yatline;
+      setup = "";
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "YATLINE_SENTINEL";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
