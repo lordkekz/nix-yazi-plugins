@@ -306,6 +306,10 @@
               ];
               whoosh.hotkeys.jump_key_k.on = [ "<F12>" ];
             };
+            recycle-bin = mkTestYazi [ "recycle-bin" ] {
+              recycle-bin.trash_dir = "$HOME/stage/trash";
+              recycle-bin.keys.open.on = [ "<F12>" ];
+            };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

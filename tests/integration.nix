@@ -232,6 +232,23 @@ let
       keys = [ "F12" ];
       expectedCwd = "/target";
     };
+    recycle-bin = {
+      yazi = testYazis.recycle-bin;
+      setup = ''
+        mkdir -p "$stage/trash/files" "$stage/trash/info"
+        : > "$stage/trash/files/RECYCLE_BIN_SENTINEL.txt"
+        printf '%s\n' '[Trash Info]' 'Path=/original/RECYCLE_BIN_SENTINEL.txt' 'DeletionDate=2026-11-11T00:00:00' > "$stage/trash/info/RECYCLE_BIN_SENTINEL.txt.trashinfo"
+      '';
+      stageInHome = true;
+      keys = [
+        "F12"
+        "WAIT:Open Trash"
+      ];
+      expectedCwd = "/";
+      afterMarker = "Open Trash";
+      afterMarkerState = "present";
+      cleanupKeys = [ "Escape" ];
+    };
   };
 
   checks = lib.mapAttrs (
@@ -330,6 +347,7 @@ let
               wait_for_marker ${
                 lib.escapeShellArg (builtins.substring 5 (builtins.stringLength key - 5) key)
               } present
+              sleep 0.5
             ''
           else if lib.hasPrefix "TEXT:" key then
             ''
