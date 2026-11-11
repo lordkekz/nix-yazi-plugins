@@ -259,6 +259,7 @@
               smart-enter.keys.toggle.on = [ "<F9>" ];
             };
             full-border = mkTestYazi [ "full-border" ] { };
+            glow = mkTestYazi [ "glow" ] { };
           };
           integrationTests = import ./tests/integration.nix {
             inherit pkgs;

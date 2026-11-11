@@ -35,6 +35,16 @@ let
       afterMarker = "╭";
       afterMarkerState = "present";
     };
+    glow = {
+      yazi = testYazis.glow;
+      setup = ''
+        printf '%s\n' 'GLOW_PREVIEW_SENTINEL' > "$stage/preview.md"
+      '';
+      keys = [ "NONE" ];
+      expectedCwd = "/";
+      afterMarker = "GLOW_PREVIEW_SENTINEL";
+      afterMarkerState = "present";
+    };
   };
 
   checks = lib.mapAttrs (
